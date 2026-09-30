@@ -78,7 +78,7 @@
     }
 
     /* 카드 클릭 시 뒤쪽 화면 오퍼시티 효과 */
-    .slide.has-expanded > *:not(#modal-backdrop):not(.slide-card-container):not(.side-nav-arrow) {
+    .slide.has-expanded > *:not(#modal-backdrop):not(.slide-card-container) {
       opacity: 0.25;
       transition: opacity 0.3s ease;
       filter: blur(1px);
@@ -116,34 +116,6 @@
       transform: translateY(-2px);
     }
 
-    /* 좌우 희미한 슬라이드 이동 화살표 */
-    .side-nav-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 110;
-      background: rgba(15, 23, 42, 0.15);
-      color: #334155;
-      border: none;
-      width: 50px;
-      height: 90px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 24px;
-      transition: all 0.25s ease;
-      opacity: 0.35;
-    }
-    .side-nav-arrow:hover {
-      opacity: 0.9;
-      background: rgba(15, 23, 42, 0.7);
-      color: white;
-    }
-    #prev-slide-arrow { left: 16px; }
-    #next-slide-arrow { right: 16px; }
-
     .agenda-card {
       transition: all 0.25s ease;
       cursor: pointer;
@@ -156,7 +128,7 @@
       box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
     }
 
-    /* 평상시 가로형 카드 스타일 */
+    /* 평상시(클릭 이전) 폰트와 크기를 대폭 키운 가로형 카드 */
     .row-card {
       cursor: pointer;
       user-select: none;
@@ -178,7 +150,7 @@
       background-color: #f8fafc;
     }
     
-    /* 카드 클릭 시 강조 확대 효과 */
+    /* 카드 클릭 시: 소프트 앰버/블루 톤 색상 변화, 압도적 크기 확장 및 포커스 */
     .row-card.expanded {
       transform: scale(1.05);
       z-index: 50;
@@ -202,13 +174,13 @@
       line-height: 1.8 !important;
     }
 
-    /* 하단 조작 컨트롤러: 기본 숨김 (P키 또는 콘솔 명령어로 토글) */
+    /* 하단 조작 컨트롤러: 기본 비활성화(숨김) */
     #controls {
       position: absolute;
       bottom: 24px;
       right: 32px;
       z-index: 100;
-      display: none;
+      display: none; /* 기본 숨김 상태 */
       gap: 14px;
       align-items: center;
       background: rgba(15, 23, 42, 0.9);
@@ -284,11 +256,6 @@
       .row-card.expanded div {
         font-size: 1.25rem !important;
       }
-      .side-nav-arrow {
-        width: 36px;
-        height: 70px;
-        font-size: 18px;
-      }
       #controls {
         bottom: 14px;
         right: 14px;
@@ -321,7 +288,7 @@
         aspect-ratio: auto !important;
         overflow: visible !important;
       }
-      #controls, #return-agenda-btn, .slide-border, .side-nav-arrow {
+      #controls, #return-agenda-btn, .slide-border {
         display: none !important;
       }
       .slide {
@@ -356,14 +323,6 @@
   <div id="presentation-area">
     <div class="slide-border"></div>
 
-    <!-- 좌우 희미한 슬라이드 이동 화살표 -->
-    <button id="prev-slide-arrow" class="side-nav-arrow" onclick="prevSlide()" title="이전 화면">
-      <i class="fa-solid fa-chevron-left"></i>
-    </button>
-    <button id="next-slide-arrow" class="side-nav-arrow" onclick="nextSlide()" title="다음 화면">
-      <i class="fa-solid fa-chevron-right"></i>
-    </button>
-
     <button id="return-agenda-btn" class="hidden" onclick="goToSlide(1)" title="목차로 복귀 (ESC)">
       <i class="fa-solid fa-list-ul"></i>
       <span>목차 보기</span>
@@ -374,16 +333,16 @@
       <div class="inline-block px-7 py-3 rounded-full bg-blue-100 text-blue-800 text-xl font-extrabold mb-8 shadow-sm">
         원내 학습 및 상담 현황 보고
       </div>
-      <h1 class="text-slate-900 font-black text-4xl sm:text-6xl md:text-[68px] leading-tight tracking-tight mb-8">
-        주요 학생 4명 학습 진단 및<br>
-        <span class="text-blue-600">학부모 상담 내용 공유</span>
+      <h1 class="text-slate-900 font-black text-5xl sm:text-6xl md:text-[68px] leading-tight tracking-tight mb-8">
+        주요 원생 4인 학습 진단 및<br>
+        <span class="text-blue-600">학부모 상담 결과 종합 브리핑</span>
       </h1>
       <div class="w-24 h-2 bg-blue-600 mb-8 mx-auto rounded-full"></div>
       <p class="text-slate-800 text-3xl sm:text-4xl font-extrabold mb-8">
-        대상 학생: 이은채 • 김승윤 • 박정원 • 최시하
+        대상 원생: 이은채 • 김승윤 • 박정원 • 최시하
       </p>
       <div class="inline-flex items-center gap-3 text-slate-600 text-lg sm:text-xl font-bold bg-white px-8 py-3.5 rounded-full border-2 border-slate-200 shadow-sm animate-pulse">
-        <span>화면을 누르면 목차로 이동합니다</span>
+        <span>화면을 클릭하면 목차로 이동합니다</span>
         <i class="fa-solid fa-arrow-right"></i>
       </div>
     </div>
@@ -393,10 +352,10 @@
       <div class="flex justify-between items-end pb-3 border-b-2 border-slate-200">
         <div>
           <span class="text-blue-600 font-black text-base uppercase tracking-wider">STUDENT CASE LIST</span>
-          <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-1">상담 및 집중 관리 학생 목록</h2>
+          <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-1">상담 및 밀착 케어 대상 원생</h2>
         </div>
         <span class="text-blue-800 text-base bg-blue-50 px-5 py-2.5 rounded-xl border border-blue-200 font-bold shadow-sm">
-          <i class="fa-solid fa-arrow-pointer mr-2"></i>학생 이름을 누르면 해당 상담 내용으로 바로 이동합니다
+          <i class="fa-solid fa-arrow-pointer mr-2"></i>원생 카드를 누르면 해당 세부 보고서로 즉시 이동합니다
         </span>
       </div>
 
@@ -407,12 +366,12 @@
             <div>
               <h3 class="text-2xl sm:text-3xl font-black text-slate-900 leading-snug">
                 이은채 (Stella) 
-                <span class="text-blue-600 font-bold ml-3 text-2xl">| 등원 시간 조율 및 화요일 단어 보충</span>
+                <span class="text-blue-600 font-bold ml-3 text-2xl">| 등원 시간 조율 및 화요일 단어 보충 관리</span>
               </h3>
-              <p class="text-lg text-slate-500 font-semibold mt-1.5">자주 늦는 습관을 고치기 위해 등원 시간을 조율하고, 주 1회 하원 전 30분 동안 단어를 더 외우기로 했습니다.</p>
+              <p class="text-lg text-slate-500 font-semibold mt-1.5">지각 습관 개선 협의 완료 및 주 1회 하원 전 30분 개별 보충 합의</p>
             </div>
           </div>
-          <i class="fa-solid fa-chevron-right text-slate-400 text-2xl pr-2"></i>
+          <i class="fa-solid fa-chevron-right text-slate-400 text-2xl pr-3"></i>
         </div>
 
         <div class="agenda-card bg-white p-7 rounded-2xl border-2 border-slate-200 shadow-sm flex items-center justify-between" onclick="goToSlide(5)">
@@ -421,12 +380,12 @@
             <div>
               <h3 class="text-2xl sm:text-3xl font-black text-slate-900 leading-snug">
                 김승윤 
-                <span class="text-blue-600 font-bold ml-3 text-2xl">| 단어 시험 점수 차이에 대한 학부모 상담</span>
+                <span class="text-blue-600 font-bold ml-3 text-2xl">| 단어 시험 편차 상담 및 학습 과도기 설득</span>
               </h3>
-              <p class="text-lg text-slate-500 font-semibold mt-1.5">집에서 볼 때와 학원 시험 점수가 다른 이유를 차분히 설명해 드리고, 지금이 단어가 늘어나는 과도기임을 안내했습니다.</p>
+              <p class="text-lg text-slate-500 font-semibold mt-1.5">가정 평가와 학원 퀴즈의 차이 소명 및 어휘 확장기 성장 과정 확신 부여</p>
             </div>
           </div>
-          <i class="fa-solid fa-chevron-right text-slate-400 text-2xl pr-2"></i>
+          <i class="fa-solid fa-chevron-right text-slate-400 text-2xl pr-3"></i>
         </div>
 
         <div class="agenda-card bg-white p-7 rounded-2xl border-2 border-slate-200 shadow-sm flex items-center justify-between" onclick="goToSlide(8)">
@@ -435,12 +394,12 @@
             <div>
               <h3 class="text-2xl sm:text-3xl font-black text-slate-900 leading-snug">
                 박정원 (Clara) 
-                <span class="text-blue-600 font-bold ml-3 text-2xl">| 외부 평가로 인한 오해 설명 및 신뢰 회복</span>
+                <span class="text-blue-600 font-bold ml-3 text-2xl">| 외부 평가 오해 해소 및 객관적 데이터 안내</span>
               </h3>
-              <p class="text-lg text-slate-500 font-semibold mt-1.5">실제 퀴즈 시험지를 보여드리며 오해를 풀어드리고, 진도를 나가면서 생기는 자연스러운 기복에 대해 설명해 드렸습니다.</p>
+              <p class="text-lg text-slate-500 font-semibold mt-1.5">실제 퀴즈지 확인을 통한 오해 불식 및 음가 적용기 자연스러운 기복 설명</p>
             </div>
           </div>
-          <i class="fa-solid fa-chevron-right text-slate-400 text-2xl pr-2"></i>
+          <i class="fa-solid fa-chevron-right text-slate-400 text-2xl pr-3"></i>
         </div>
 
         <div class="agenda-card bg-white p-7 rounded-2xl border-2 border-slate-200 shadow-sm flex items-center justify-between" onclick="goToSlide(11)">
@@ -449,12 +408,12 @@
             <div>
               <h3 class="text-2xl sm:text-3xl font-black text-slate-900 leading-snug">
                 최시하 
-                <span class="text-blue-600 font-bold ml-3 text-2xl">| 과제 부담으로 인한 일시 휴원 상담</span>
+                <span class="text-blue-600 font-bold ml-3 text-2xl">| 과제 부담 완화를 위한 일시 휴원 결정</span>
               </h3>
-              <p class="text-lg text-slate-500 font-semibold mt-1.5">수업 태도는 아주 훌륭하나 가정에서 과제 스트레스가 커서 잠시 쉬어가기로 했으며, 추후 복귀하기로 약속했습니다.</p>
+              <p class="text-lg text-slate-500 font-semibold mt-1.5">원내 참여도는 최상위권, 가정 내 마찰 해소 후 재등록 긍정적 확약</p>
             </div>
           </div>
-          <i class="fa-solid fa-chevron-right text-slate-400 text-2xl pr-2"></i>
+          <i class="fa-solid fa-chevron-right text-slate-400 text-2xl pr-3"></i>
         </div>
       </div>
       <div></div>
@@ -464,7 +423,7 @@
     <div class="slide p-8 sm:p-12 bg-slate-50 justify-between">
       <div>
         <span class="text-base font-black text-rose-700 bg-rose-100 px-4 py-1.5 rounded-lg border border-rose-300">CASE 01 • OVERVIEW</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">이은채 학생: 학습 현황 점검 및 화요일 보충 합의</h2>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">이은채: 학습 현황 점검 및 화요일 보충 합의</h2>
         <p class="text-base text-slate-500 mt-1 font-semibold"><i class="fa-solid fa-hand-pointer text-blue-500 mr-2"></i>카드를 누르면 배경이 흐려지며 해당 내용만 집중 확대됩니다. 다시 누르면 원래대로 돌아옵니다.</p>
       </div>
 
@@ -474,9 +433,9 @@
             현재 상태
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 수업 시작 시간에 자주 늦어 앞부분의 중요한 복습 내용을 놓치는 일이 많았습니다.<br>
-            <span class="text-slate-500 font-semibold text-lg">→ 진도가 쌓이면서 혼자 따라가는 속도가 느려지고 시험 점수도 오락가락했습니다.</span></p>
-            <p>• 스펠링을 외우는 힘과 단어 아는 양이 부족해 문장 쓰기(라이팅) 수업을 버거워했습니다.</p>
+            <p>• 수업 전 잦은 지각으로 핵심 도입부와 음가 복습 누락<br>
+            <span class="text-slate-500 font-semibold text-lg">→ 누적 진도로 인해 과제 속도가 느려지고 퀴즈 점수 기복이 심해짐</span></p>
+            <p>• 철자 암기량과 필수 어휘가 부족하여 라이팅 진도 소화에 부담 호소</p>
           </div>
         </div>
 
@@ -485,9 +444,9 @@
             상담 내용
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 어머님과 통화해 보니 집에서는 온라인 숙제만 겨우 챙겨주는 상황이라 지도에 한계가 있다고 하셨습니다.</p>
-            <p>• 늦는 버릇을 잡기 위해 등원 시간을 조금만 앞당겨 주십사 부탁드리고,<br>
-            <span class="text-blue-700 font-extrabold text-lg">→ 학원에서 남아서 부족한 단어를 외우고 갈 수 있도록 보충 수업을 먼저 제안했습니다.</span></p>
+            <p>• 어머님 상담 결과, "가정에서 온라인 숙제만 겨우 챙기는 수준"이라며 케어 한계 인정</p>
+            <p>• 지각 방지를 위해 등원 시간을 5분 앞당겨 주시길 요청드리고,<br>
+            <span class="text-blue-700 font-extrabold text-xl">→ 부족한 어휘를 학원에서 직접 채워주는 '원내 체류 보충'을 선제적으로 제안</span></p>
           </div>
         </div>
 
@@ -496,8 +455,8 @@
             조치 결과
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 앞으로 매주 화요일 수업이 끝나고 30분씩 남아서 단어를 집중적으로 외우기로 합의했습니다.</p>
-            <p>• 학원에서 이렇게 신경 써 주니 든든하다며 어머님께서 매우 고마워하셨고 현재 잘 진행 중입니다.</p>
+            <p>• 매주 화요일 정규 수업 후 30분간 원에 남아 '단어 집중 암기'를 진행하기로 최종 합의</p>
+            <p>• 학원의 꼼꼼하고 능동적인 지도 방식에 학부모가 매우 안심하며 안정적으로 수강 유지</p>
           </div>
         </div>
       </div>
@@ -517,9 +476,9 @@
             수업 관찰<br>내용
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 수업에 자꾸 늦다 보니 처음 10분 동안 진행되는 지난 내용 복습과 소리 내어 읽기를 자주 놓쳤습니다.</p>
-            <p>• 앞부분을 놓치니 후반부에 혼자 글을 쓰거나 문제를 풀 때 친구들에 비해 진행 속도가 눈에 띄게 느려졌습니다.</p>
-            <p>• 매주 보는 단어 퀴즈도 맞히는 점수의 기복이 큰 편이어서 따로 관리가 필요한 상황이었습니다.</p>
+            <p>• 잦은 입실 지연으로 초반 10분 동안 진행되는 파닉스 및 음가 리뷰가 반복 누락됨</p>
+            <p>• 도입부 결손이 이어지면서 수업 후반부 개별 작성 활동에서 또래 대비 작업 속도 저하</p>
+            <p>• 주간 단위로 치러지는 단어 퀴즈에서 주차별 성적 기복이 매우 불안정하게 나타남</p>
           </div>
         </div>
 
@@ -528,9 +487,9 @@
             학부모 면담<br>확인 사항
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 학교에서 학원까지 오는 시간은 충분하지만, 아이가 걸음걸이가 느리고 장난을 치다 보니 늦는 것을 확인했습니다.</p>
-            <p>• 집안에 컴퓨터가 따로 없어서,<br>
-            <span class="text-rose-700 font-extrabold text-lg">→ 학원에서 내주는 온라인 숙제(C-Learning)를 집에서 채워주기 어려운 환경임을 파악했습니다.</span></p>
+            <p>• 하교 동선 점검: 이동 시간 자체는 충분하나, 아이 걸음이 느려 지체되는 성향 확인</p>
+            <p>• 가정 내 학습 환경: 집에 PC가 구비되어 있지 않아,<br>
+            <span class="text-rose-700 font-extrabold text-xl">→ 결손을 메워줄 온라인 연계 학습(C-Learning) 진행에 물리적 한계가 존재했음을 파악</span></p>
           </div>
         </div>
       </div>
@@ -550,9 +509,9 @@
             강사 진단<br>소견
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 수업 시간에 선생님 질문에 대답도 잘하고 발표하는 태도는 아주 훌륭합니다.</p>
-            <p>• 다만 다음 단계로 올라가기 위해서는 <br>
-            <span class="text-blue-700 font-extrabold text-2xl">"정확한 스펠링 암기"와 "전반적인 단어 양 늘리기"가 꼭 필요한 상태입니다.</span></p>
+            <p>• 문장의 청크 패턴 이해도와 교실 내 발표 참여 태도는 매우 긍정적이고 적극적임</p>
+            <p>• 다만 다음 레벨 진입을 위해서는 단순 의미 파악을 넘어선 <br>
+            <span class="text-blue-700 font-extrabold text-2xl">"정확한 철자 암기(Spelling)"와 "필수 어휘 총량 확대"가 반드시 선행되어야 함</span></p>
           </div>
         </div>
 
@@ -561,9 +520,9 @@
             해결 방안<br>협의 결과
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 매주 화요일 수업이 끝나고 30분에서 40분 정도 남아서 단어 시험과 암기를 마치고 가기로 했습니다.</p>
-            <p>• 어머님께서 "마침 끝나는 시간에 맞춰 피아노 학원에 가면 되니 동선이 딱 좋다"며 반겨주셨습니다.</p>
-            <p>• 학원에서 먼저 나서서 잡아주니 안심이 된다며 학원에 대한 신뢰를 더욱 돈독히 다졌습니다.</p>
+            <p>• 화요일 정규 수업 종료 후 30~40분간 학원에 체류하며 개별 단어 점검 후 하원 결정</p>
+            <p>• 학부모님 피드백: "이후 이동할 피아노 학원 동선과도 딱 맞아 안심된다"며 흔쾌히 수락</p>
+            <p>• 학원의 선제적이고 책임감 있는 개입으로 이탈 우려를 완전히 종식하고 신뢰 확보</p>
           </div>
         </div>
       </div>
@@ -574,7 +533,7 @@
     <div class="slide p-8 sm:p-12 bg-slate-50 justify-between">
       <div>
         <span class="text-base font-black text-amber-800 bg-amber-100 px-4 py-1.5 rounded-lg border border-amber-300">CASE 02 • OVERVIEW</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">김승윤 학생: 단어 시험 점수 차이 상담 및 신뢰 형성</h2>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">김승윤: 단어 시험 편차 상담 및 신뢰 형성</h2>
         <p class="text-base text-slate-500 mt-1 font-semibold"><i class="fa-solid fa-hand-pointer text-blue-500 mr-2"></i>카드를 누르면 배경이 흐려지며 해당 내용만 집중 확대됩니다. 다시 누르면 원래대로 돌아옵니다.</p>
       </div>
 
@@ -584,8 +543,8 @@
             현재 상태
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 집에서 시험을 볼 때는 다 맞추는데, 학원 단어 시험만 보면 점수가 낮게 나와 어머님께서 걱정하셨습니다.</p>
-            <p>• 우리말 뜻을 보고 영어 단어를 직접 쓸 때, 소리와 스펠링을 연결하는 과정에서 헷갈려 하는 모습을 보였습니다.</p>
+            <p>• 집에서는 단어 시험을 완벽히 맞추나, 학원 정기 퀴즈 점수가 저조하게 나와 학부모 우려 발생</p>
+            <p>• 한국어 뜻을 보고 영단어 철자를 인출하여 적는 과정에서 발음 및 스펠링 혼동 확인</p>
           </div>
         </div>
 
@@ -594,8 +553,8 @@
             상담 내용
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 어머님께서 "집에서는 다 맞는데 왜 이럴까요? 공부시키는 방식이 잘못된 건가요?" 하고 물어보셨습니다.</p>
-            <p>• 지금은 단어가 폭발적으로 늘어나는 시기라 누구나 겪는 자연스러운 과정이라고 자세히 설명해 드렸습니다.</p>
+            <p>• 어머님: "집에서는 다 외웠는데 왜 학원 점수는 안 나오는지, 공부 방식이 잘못된 건지 걱정" 표출</p>
+            <p>• 원내 대응: 어휘량이 폭발적으로 늘어나는 단계에서 누구나 겪는 자연스러운 과도기임을 설명</p>
           </div>
         </div>
 
@@ -604,8 +563,8 @@
             조치 결과
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 집에서는 뜻을 보고 단어를 적어보는 연습 위주로 봐주시고, 점수보다 아이를 많이 격려해 주사사 부탁드렸습니다.</p>
-            <p>• 학원의 설명을 들으시고 마음을 놓으셨으며, 믿고 차분히 지켜보시겠다고 하셨습니다.</p>
+            <p>• 가정에서는 한글 뜻-영단어 매칭 위주로 짚어주시길 가이드하고 점수 질책 대신 격려 당부</p>
+            <p>• 체계적인 학원 커리큘럼의 성장 메커니즘을 납득하시고 차분히 지켜보기로 신뢰 회복</p>
           </div>
         </div>
       </div>
@@ -616,28 +575,28 @@
     <div class="slide p-8 sm:p-12 bg-white justify-between">
       <div>
         <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">김승윤 상담 상세 리포트 (1/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">학습 진단 내용 및 학부모님이 걱정하신 이유</h2>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">학습 진단 세부 내역 및 학부모 의구심 원인</h2>
       </div>
 
       <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
         <div class="row-card">
           <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            학생 상태<br>정밀 진단
+            학생 인지<br>상태 진단
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 문장 만들기(청크북) 숙제는 밀리지 않고 항상 아주 성실하게 해옵니다.</p>
-            <p>• 입으로 말해볼 때는 스펠링을 잘 말하지만, 막상 공책에 뜻을 보고 영어로 쓰게 하면 철자를 자주 틀립니다.</p>
-            <p>• 긴 글을 읽을 때 새로운 단어의 발음을 가끔 실수하거나 문장 속 중요한 세부 내용을 놓치기도 합니다.</p>
+            <p>• 청크북 숙제는 한 번도 거르지 않고 매우 성실하고 완벽하게 수행해 옴</p>
+            <p>• 말로 철자를 물어보면 즉각 정답을 말하지만, 한국어 뜻을 보고 쓰게 하면 철자 인출 오류 발생</p>
+            <p>• 긴 문장은 무리 없이 읽어내나, 신규 어휘 발음 오류와 지문 세부 단서 파악이 미흡함</p>
           </div>
         </div>
 
         <div class="row-card">
           <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            학부모님<br>고민 상담
+            학부모 상담<br>주요 호소
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• "집에서 시험 볼 때는 다 맞히는데 왜 학원만 오면 점수가 떨어지는지 답답하다"고 하소연하셨습니다.</p>
-            <p>• 혹시 지금 학원에서 가르치는 방식이 아이에게 안 맞는 것은 아닌지 걱정 어린 눈으로 물어보셨습니다.</p>
+            <p>• "집에서 철저히 테스트해서 보냈는데 학원 점수만 낮게 나오는 이유를 모르겠다"며 답답함 토로</p>
+            <p>• "지금 학원에서 지도하고 있는 학습 방식과 진도가 아이에게 맞는가"라는 근본적 의구심 제기</p>
           </div>
         </div>
       </div>
@@ -648,27 +607,29 @@
     <div class="slide p-8 sm:p-12 bg-white justify-between">
       <div>
         <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">김승윤 상담 상세 리포트 (2/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">설득 과정 및 가정 연계 지도 안내</h2>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">논리적 설득 논리 및 홈케어 가이드라인</h2>
       </div>
 
       <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
         <div class="row-card">
           <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            단어 학습의<br>과도기 설명
+            '학습 과도기'<br>전문적 설명
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 지금 단계는 외워야 할 단어 양이 갑자기 많아지는 시기라 머릿속에서 정리가 안 될 수 있다고 설명해 드렸습니다.</p>
-            <p>• 영어가 한 단계 도약할 때 아이들이 공통으로 겪는 성장통 같은 것이니 너무 걱정하지 마시라고 안심시켜 드렸습니다.</p>
+            <p>• 현재 레벨은 기초 파닉스를 넘어 필수 어휘량이 급증하는 중요한 전환 구간임을 인지시킴</p>
+            <p>• 머릿속에 축적된 단어들의 체계를 정립하는 과정에서 일어나는 자연스러운 정체기임을 설명</p>
+            <p>• 동일 과정을 거쳐간 상위권 학생들의 성장 데이터를 제시하여 학부모의 불안감 선제적 차단</p>
           </div>
         </div>
 
         <div class="row-card">
           <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            가정에서<br>도와주실 점
+            학생 확신 및<br>가정 지도
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• "승윤이는 머리가 좋아 조금만 다시 짚어주면 금방 제 실력을 찾는 아이니 믿어달라고 말씀드렸습니다."</p>
-            <p>• 집에서는 단어 시험 점수로 다그치지 마시고, 우리말 뜻과 영단어를 짝지어 가볍게 읽어보는 위주로 도와달라고 부탁드렸습니다.</p>
+            <p>• "승윤이는 절대 뒤처지는 학생이 아니며, 한 번 짚어주면 바로 교정하는 뛰어난 역량이 있다" 확신 부여</p>
+            <p>• 집에서는 단어 철자 암기 압박 대신, 한국어 뜻과 매칭하는 방식으로 가볍게 점검해 주시길 권고</p>
+            <p>• 아이가 위축되지 않도록 학원 점수로 평가하기보다 꾸준한 지지와 칭찬을 보내줄 것을 당부</p>
           </div>
         </div>
       </div>
@@ -679,7 +640,7 @@
     <div class="slide p-8 sm:p-12 bg-slate-50 justify-between">
       <div>
         <span class="text-base font-black text-emerald-800 bg-emerald-100 px-4 py-1.5 rounded-lg border border-emerald-300">CASE 03 • OVERVIEW</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">박정원 학생: 외부 평가 오해 설명 및 신뢰 회복</h2>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">박정원: 외부 평가 오해 해소 및 데이터 기반 방어</h2>
         <p class="text-base text-slate-500 mt-1 font-semibold"><i class="fa-solid fa-hand-pointer text-blue-500 mr-2"></i>카드를 누르면 배경이 흐려지며 해당 내용만 집중 확대됩니다. 다시 누르면 원래대로 돌아옵니다.</p>
       </div>
 
@@ -689,8 +650,8 @@
             현재 상태
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 평소 수업 태도는 아주 좋으나 숙제를 할 때 가끔 알파벳 순서를 헷갈려 할 때가 있습니다.</p>
-            <p>• 영어를 잘 아시는 친척(이모)분이 공부를 봐주시다가 "애가 알파벳도 모른다"고 하셔서 어머님께서 깜짝 놀라 연락을 주셨습니다.</p>
+            <p>• 원내 수업 참여도와 이해도는 최상위권이나, 쓰기 과제 시 일시적인 철자 순서 혼동 발생</p>
+            <p>• 영어를 업으로 하는 친척(이모)의 단편적 지적으로 학부모가 충격을 받고 원으로 긴급 점검 요청</p>
           </div>
         </div>
 
@@ -699,8 +660,8 @@
             상담 내용
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 어머님께서 진짜 알파벳조차 모르는 상태인지 걱정하시기에,</p>
-            <p>• 실제 시험지를 꺼내어 보여드리며 이모분의 말씀은 사실과 다르다는 점을 짚어드렸습니다.</p>
+            <p>• 이모가 "알파벳 자체를 모르는 상태 같다"고 지적하여 어머님이 진위 파악을 원하심</p>
+            <p>• 원내 실제 퀴즈지(kitchen 철자 중 't' 하나 누락)를 확인시켜 드리며 명백한 과장임을 확인</p>
           </div>
         </div>
 
@@ -709,8 +670,8 @@
             조치 결과
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 파닉스로 배운 소리를 실제 단어 쓰기에 적용할 때 누구나 겪는 일시적 현상이라고 설명해 드렸습니다.</p>
-            <p>• 그동안 잘 해내온 성적을 보여드리며 어머님의 불안감을 깨끗하게 씻어드렸습니다.</p>
+            <p>• 배운 음가를 직접 쓰기에 적용할 때 나타나는 지극히 정상적인 '업다운 구간'임을 전문적으로 설명</p>
+            <p>• 이전 단계 우수 수료 등 객관적 실적을 상기시켜 학부모님의 불안과 오해를 완벽하게 해소</p>
           </div>
         </div>
       </div>
@@ -721,28 +682,29 @@
     <div class="slide p-8 sm:p-12 bg-white justify-between">
       <div>
         <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">박정원 상담 상세 리포트 (1/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">학원에서의 모습과 외부 평가로 인한 해프닝</h2>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">교실 내 우수 성취도 및 외부 평가 발단</h2>
       </div>
 
       <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
         <div class="row-card">
           <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            학원에서의<br>실제 모습
+            교실 내 실제<br>학습 태도
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 수업 시간에 항상 밝고 의욕적으로 참여하며, 단어 소리도 정확하게 잘 읽어내는 모범생입니다.</p>
-            <p>• 숙제도 미리미리 해올 정도로 스스로 공부하려는 의지가 강한 편입니다.</p>
-            <p>• 파닉스 규칙을 이해하는 능력이 좋아 반에서 상위권 실력을 유지하고 있습니다.</p>
+            <p>• 언제나 활기차게 수업에 임하며, 제시된 단어를 정확한 음가로 소리 내어 읽는 모범생</p>
+            <p>• 수업 전 스스로 퀴즈 대비를 미리 끝마칠 정도로 뛰어난 자기주도성과 학습 의욕 보유</p>
+            <p>• 파닉스 규칙 인지 능력이 뛰어나 교실 내에서도 또래를 이끌어가는 상위권 그룹에 속함</p>
           </div>
         </div>
 
         <div class="row-card">
           <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            외부 평가로<br>생긴 오해
+            외부 평가로<br>인한 위기
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 영어 관련 일을 하시는 이모분이 숙제를 봐주다가 'kitchen'을 'chicken'처럼 쓴 것을 보셨습니다.</p>
-            <p>• "이 아이는 기본 알파벳도 모르는 것 같다"고 하신 말씀에 어머님이 크게 흔들리셔서 학원에 확인 전화를 주셨습니다.</p>
+            <p>• 영어 관련 업종에 종사하는 친척(이모)이 정원이의 퀴즈 공부를 봐주던 중 문제 제기</p>
+            <p>• "'kitchen'을 'chicken'으로 쓴다. 이 아이는 기본 알파벳조차 인지하지 못하고 있다"며 단언</p>
+            <p>• 전문가 친인척의 단정적 지적에 크게 동요한 어머님이 학원으로 긴급 사실 확인 요청</p>
           </div>
         </div>
       </div>
@@ -753,27 +715,29 @@
     <div class="slide p-8 sm:p-12 bg-white justify-between">
       <div>
         <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">박정원 상담 상세 리포트 (2/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">시험지 확인 및 꼼꼼한 설명으로 신뢰 회복</h2>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">시험지 팩트 체크 및 학원의 전문적 스탠스</h2>
       </div>
 
       <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
         <div class="row-card">
           <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            시험지 실제<br>데이터 확인
+            원내 퀴즈지<br>실데이터 확인
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 정원이의 실제 시험지를 찾아 확인해 보니 'kitchen'에서 알파벳 't' 하나만 빠졌을 뿐 나머지는 다 맞았습니다.</p>
-            <p>• 알파벳을 모르는 것이 아니라 스펠링을 쓸 때 잠시 순서가 헷갈린 것뿐이라고 명확히 설명해 드렸습니다.</p>
+            <p>• 학생의 실제 퀴즈 답안지를 확인한 결과, 'kitchen'에서 단지 't' 하나를 누락한 것이었음</p>
+            <p>• 철자 위치나 조합에서 일시적 혼동이 있었을 뿐, 알파벳 자체를 모른다는 지적은 완벽한 왜곡임</p>
+            <p>• 실제 채점 데이터와 평소 원내 기록을 가감 없이 공유하여 외부 지적의 오류를 직접 입증</p>
           </div>
         </div>
 
         <div class="row-card">
           <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            선생님의<br>안심 설명
+            '업다운 구간'<br>이론적 소명
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 알파벳을 모르면 지금 진도를 절대 못 나간다고 말씀드리고, 소리로 배우던 것을 글자로 직접 쓸 때 아이들이 흔히 겪는 시행착오라고 알려드렸습니다.</p>
-            <p>• 학원에서의 성취 기록을 믿어달라고 당부드리며 어머님의 불안감을 기분 좋게 풀어드렸습니다.</p>
+            <p>• "알파벳을 몰랐다면 직전 스타터 단계를 통과하지 못했을 것이며, 당시 매우 우수하게 수료함" 강조</p>
+            <p>• 새로 배운 음가를 직접 쓰기(라이팅)에 적용하는 초기에는 누구나 철자 기복이 나타남을 소명</p>
+            <p>• 원내 정규 복습과 가정의 C-Learning 학습 가이드를 제시하며 학부모의 확고한 신뢰 회복</p>
           </div>
         </div>
       </div>
@@ -784,7 +748,7 @@
     <div class="slide p-8 sm:p-12 bg-slate-50 justify-between">
       <div>
         <span class="text-base font-black text-violet-800 bg-violet-100 px-4 py-1.5 rounded-lg border border-violet-300">CASE 04 • OVERVIEW</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">최시하 학생: 과제 부담으로 인한 일시 휴원 상담</h2>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">최시하: 과제 부담 완화를 위한 일시 휴원 결정</h2>
         <p class="text-base text-slate-500 mt-1 font-semibold"><i class="fa-solid fa-hand-pointer text-blue-500 mr-2"></i>카드를 누르면 배경이 흐려지며 해당 내용만 집중 확대됩니다. 다시 누르면 원래대로 돌아옵니다.</p>
       </div>
 
@@ -794,8 +758,8 @@
             현재 상태
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 수업 태도나 이해도는 교실에서 손꼽힐 정도로 좋으나, 단어 숙제와 암기하는 것을 너무 힘들어했습니다.</p>
-            <p>• 레벨이 올라가면서 숙제가 많아지다 보니 집에서 부모님과 아이 사이에 다툼이 잦아졌습니다.</p>
+            <p>• 수업 이해도, 발표 참여도, 문법 소화력 등 원내 수업 태도는 교실 내 최상위권 유지</p>
+            <p>• 레벨업 진급 이후 증가한 단어 암기와 과제량으로 인해 가정 내 스트레스와 모자 갈등 심화</p>
           </div>
         </div>
 
@@ -804,8 +768,8 @@
             상담 내용
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 어머님께서 "아이가 숙제 때문에 너무 스트레스를 받아 하니 억지로 시키기보다 잠시 쉬게 하고 싶다"고 하셨습니다.</p>
-            <p>• 시하의 뛰어난 재능을 아는 저로서도 많이 아쉬웠지만 어머님의 마음을 깊이 공감해 드렸습니다.</p>
+            <p>• 어머님 면담: "아이가 단어 숙제를 너무 힘들어해 억지로 시키기보다 잠시 쉬어가고 싶다" 전달</p>
+            <p>• 강사 소견: 시하가 지닌 뛰어난 잠재력과 수업 몰입도에 깊이 공감하며 휴원에 대한 아쉬움 공유</p>
           </div>
         </div>
 
@@ -814,8 +778,8 @@
             조치 결과
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 학원 수업이나 선생님에 대한 불만은 전혀 없으며 아이도 학원 오는 것은 좋아한다고 하셨습니다.</p>
-            <p>• "아이 컨디션을 회복하고 나면 꼭 다시 연락해 보내겠다"는 기분 좋은 약속을 받고 원만하게 마무리했습니다.</p>
+            <p>• 학원 수업과 지도 방식에 대한 불만은 전혀 없음을 명확히 확인 ("아이는 학원 가는 걸 좋아함")</p>
+            <p>• "아이 컨디션을 추스르고 나면 반드시 다시 연락드리고 복귀시키겠다"는 긍정적 확약 확보</p>
           </div>
         </div>
       </div>
@@ -826,18 +790,18 @@
     <div class="slide p-8 sm:p-12 bg-white justify-between">
       <div>
         <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">최시하 상담 상세 리포트 (1/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">뛰어난 수업 참여도와 레벨업 후 찾아온 부담감</h2>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">최상위권 수업 퍼포먼스와 레벨업 후 부담감</h2>
       </div>
 
       <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
         <div class="row-card">
           <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            원내 최고 수준의<br>학습 태도
+            원내 최고 수준의<br>학습 기량
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 조용하지만 집중력이 아주 높고, 발표나 토론 수업 때 자기 생각을 적극적으로 잘 말합니다.</p>
-            <p>• 지문의 핵심 내용을 스스로 정리해 내는 인지 능력이 또래에 비해 월등히 뛰어납니다.</p>
-            <p>• 듣고 요약하는 것은 물론이고 문법 개념도 척척 흡수할 정도로 머리가 좋은 학생입니다.</p>
+            <p>• 조용하지만 수업 집중력이 남다르며, 디스커션 활동 시 자신의 의견을 매우 적극적으로 개진</p>
+            <p>• 지문의 공통점과 차이점을 그래픽 오거나이저로 스스로 완성해 낼 만큼 인지 능력이 탁월</p>
+            <p>• 듣기 내용 요약은 물론, 소유격 및 대명사 등 까다로운 문법 규칙도 완벽하게 흡수함</p>
           </div>
         </div>
 
@@ -846,8 +810,8 @@
             레벨 진급에 따른<br>과제 압박
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 실력이 좋아 상위 레벨(Sprout)로 진급했으나, 그만큼 외워야 할 단어와 숙제 양도 많아졌습니다.</p>
-            <p>• 학원 수업은 잘 따라왔지만 집에서 혼자 숙제를 소화해 내는 데 마음의 부담이 컸던 것 같습니다.</p>
+            <p>• 뛰어난 역량으로 상위 레벨(Sprout)로 월반 진급하였으나, 이에 수반되는 학습량이 급증</p>
+            <p>• 학원 교실에서는 무리 없이 따라왔으나, 가정에서 단어 암기와 숙제를 홀로 소화하는 데 한계 봉착</p>
           </div>
         </div>
       </div>
@@ -858,28 +822,29 @@
     <div class="slide p-8 sm:p-12 bg-white justify-between">
       <div>
         <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">최시하 상담 상세 리포트 (2/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">휴원 결정 배경 및 훗날의 재등원 약속</h2>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">휴원 결정 수용 및 재등록 가능성 확보</h2>
       </div>
 
       <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
         <div class="row-card">
           <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            가정 내 마찰과<br>휴원 결정
+            가정 내 마찰로<br>인한 휴식 결정
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 어머님께서 "학기 초부터 단어 암기시키는 것 때문에 아이와 매일 전쟁을 치렀다"고 털어놓으셨습니다.</p>
-            <p>• 숙제 때문에 사이가 나빠지느니 차라리 아이에게 휴식을 주는 게 맞다고 판단해 결정을 내리셨습니다.</p>
-            <p>• 저 역시 아이의 정서가 먼저라 어머님의 결정을 존중하고 위로해 드렸습니다.</p>
+            <p>• 어머님 호소: "학기 초부터 단어장 숙제와 시험 준비를 유독 힘들어했다"</p>
+            <p>• 숙제 문제로 부모와 아이 사이의 감정 마찰이 잦아져, 억지로 지속하기보다 휴식을 주기로 결정</p>
+            <p>• 강사 역시 가정 내 스트레스 상황에 공감하며 아이의 정서 안정을 위해 결정을 존중함</p>
           </div>
         </div>
 
         <div class="row-card">
           <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            따뜻한 마무리와<br>복귀 약속
+            학원 신뢰 확인 및<br>복귀 약속
           </span>
           <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 학원 시스템에 불만이 있어서 나가는 것이 아님을 어머님께서 거듭 강조하셨습니다.</p>
-            <p>• "아이가 학원 오는 것 자체는 참 좋아했으니 좀 쉬고 나면 다시 보내겠다"며 웃으며 인사 나눴습니다.</p>
+            <p>• 학원 커리큘럼이나 강사 지도력에 대한 불만은 전무함을 명확히 확인</p>
+            <p>• "아이가 학원 수업 자체는 무척 즐거워했기 때문에, 좀 쉬다가 다시 보내달라 할 것 같다" 확답</p>
+            <p>• 감정 상함 없는 원만한 마무리로 언제든 복귀할 수 있는 긍정적 유대 관계 유지</p>
           </div>
         </div>
       </div>
@@ -890,8 +855,8 @@
     <div class="slide justify-between items-center text-center p-12 bg-slate-900 text-white">
       <div>
         <span class="text-blue-400 text-base font-black uppercase tracking-wider mb-2 inline-block">SUMMARY & ACTION PLAN</span>
-        <h2 class="text-4xl sm:text-5xl font-black mb-3">앞으로의 학급 운영 및 관리 방향</h2>
-        <p class="text-slate-400 text-xl font-medium">아이들의 작은 변화도 놓치지 않고 편안한 학원 분위기를 만들겠습니다.</p>
+        <h2 class="text-4xl sm:text-5xl font-black mb-3">향후 학급 운영 및 밀착 관리 계획</h2>
+        <p class="text-slate-400 text-xl font-medium">원생 개개인의 작은 변화를 놓치지 않고 안정적인 학급 분위기를 조성하겠습니다.</p>
       </div>
 
       <div class="flex flex-col sm:flex-row gap-6 max-w-5xl w-full text-left my-6">
@@ -900,8 +865,8 @@
             <div class="w-12 h-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-2xl font-black mb-3">
               <i class="fa-solid fa-clock-rotate-left"></i>
             </div>
-            <h3 class="font-black text-2xl text-blue-400 mb-2">학습 공백 미리 챙기기</h3>
-            <p class="text-slate-300 text-lg leading-relaxed font-semibold">지각이나 숙제에 어려움이 보일 때<br>바로 보충을 붙여 아이가 뒤처지지 않게 지도</p>
+            <h3 class="font-black text-2xl text-blue-400 mb-2">학습 결손 선제 차단</h3>
+            <p class="text-slate-300 text-lg leading-relaxed font-semibold">지각, 과제 미흡 등 조기 징후 발견 시<br>원내 보충을 즉각 가동하여 이탈 예방</p>
           </div>
         </div>
 
@@ -910,8 +875,8 @@
             <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl font-black mb-3">
               <i class="fa-solid fa-chart-column"></i>
             </div>
-            <h3 class="font-black text-2xl text-emerald-400 mb-2">정확한 데이터로 소통</h3>
-            <p class="text-slate-300 text-lg leading-relaxed font-semibold">주변의 말에 부모님이 흔들리지 않도록<br>아이의 실제 시험 기록과 실력을 투명하게 공유</p>
+            <h3 class="font-black text-2xl text-emerald-400 mb-2">데이터 기반 객관적 상담</h3>
+            <p class="text-slate-300 text-lg leading-relaxed font-semibold">외부의 단편적 평가에 흔들리지 않도록<br>정확한 시험 데이터와 학습 이론으로 신뢰 유지</p>
           </div>
         </div>
 
@@ -920,15 +885,15 @@
             <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-2xl font-black mb-3">
               <i class="fa-solid fa-heart-circle-check"></i>
             </div>
-            <h3 class="font-black text-2xl text-amber-400 mb-2">성장 시기에 맞는 격려</h3>
-            <p class="text-slate-300 text-lg leading-relaxed font-semibold">어휘가 늘어나고 진도가 빨라지는 시기에<br>부담을 덜어주고 칭찬을 아끼지 않기</p>
+            <h3 class="font-black text-2xl text-amber-400 mb-2">성장 과도기 맞춤 격려</h3>
+            <p class="text-slate-300 text-lg leading-relaxed font-semibold">어휘 확장기 및 승급 초기의 부담을 줄이고<br>성취감을 느낄 수 있는 세심한 칭찬 강화</p>
           </div>
         </div>
       </div>
 
       <div class="border-t border-slate-800 pt-6 w-full max-w-4xl">
         <p class="text-slate-300 text-2xl font-bold leading-relaxed italic">
-          "아이들 한 명 한 명의 입장에서 생각하고 지도하는 선생님이 되겠습니다. 고맙습니다."
+          "학생 한 명 한 명의 성장이 학원의 신뢰로 이어지도록 책임감을 갖고 지도하겠습니다. 감사합니다."
         </p>
       </div>
     </div>
@@ -952,11 +917,20 @@
     const presentationArea = document.getElementById('presentation-area');
     let currentSlide = 0;
 
+    // ==============================================================
+    // [페이지 표시/컨트롤러 켜고 끄는 명령어 함수]
+    // 브라우저 개발자 도구(F12) 콘솔 또는 발표 중 키보드 단축키 [P] 키로 토글 가능
+    // togglePageControls()      -> 토글 (켜짐/꺼짐 전환)
+    // togglePageControls(true)  -> 켜기
+    // togglePageControls(false) -> 끄기
+    // ==============================================================
     function togglePageControls(forceState) {
       const isHidden = getComputedStyle(controls).display === 'none';
       const shouldShow = (typeof forceState === 'boolean') ? forceState : isHidden;
       controls.style.display = shouldShow ? 'flex' : 'none';
+      console.log(`[하단 페이지 컨트롤러]: ${shouldShow ? '활성화 (ON)' : '비활성화 (OFF)'}`);
     }
+    // 전역 등록
     window.togglePageControls = togglePageControls;
 
     function resetExpandedCards() {
@@ -1018,18 +992,17 @@
     });
 
     document.addEventListener('keydown', (e) => {
+      // 'P' 또는 'p' 입력 시 하단 페이지 표시 컨트롤러 ON/OFF 토글
       if (e.key === 'p' || e.key === 'P') {
         togglePageControls();
-      } else if (e.key === 'ArrowRight' || e.key === 'Space') {
-        nextSlide();
-      } else if (e.key === 'ArrowLeft') {
-        prevSlide();
       } else if (e.key === 'Escape' || e.key === 'Home') {
         goToSlide(1);
       }
     });
 
-    // 가로형 카드 클릭 토글 (확대/축소 및 색상 하이라이트)
+    // ==============================================================
+    // 가로형 카드 클릭 토글: 클릭 창 강조 & 주변 오퍼시티 효과
+    // ==============================================================
     document.querySelectorAll('.row-card').forEach(card => {
       card.addEventListener('click', function(e) {
         e.stopPropagation();
@@ -1047,6 +1020,7 @@
       });
     });
 
+    // 배경 클릭 시 카드 원복
     document.addEventListener('click', () => {
       resetExpandedCards();
     });
