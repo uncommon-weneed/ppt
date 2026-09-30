@@ -135,20 +135,24 @@
 
     /* 하단 컨트롤 바 */
     #controls {
-      position: right;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      background: rgba(32, 33, 36, 0.85);
-      padding: 8px 24px;
-      border-radius: 30px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
-      backdrop-filter: blur(5px);
-    }
+  position: absolute;
+  bottom: 20px;       /* 하단 여백 (원하는 만큼 조절 가능) */
+  right: 28px;        /* 오른쪽 여백 (원하는 만큼 조절 가능) */
+  z-index: 100;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  background: rgba(32, 33, 36, 0.85);
+  padding: 6px 16px;
+  border-radius: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(5px);
+  width: 15px;       /* 가로 너비 직접 지정 */
+  height: 7px;       /* 세로 높이 직접 지정 */
+  justify-content: center; /* 내부 아이콘들을 가운데 정렬 */
+  display: none; /* 화면에서 완전히 숨김 flex/none */
+  
+}
 
     .control-btn {
       background: transparent;
@@ -181,6 +185,62 @@
     .card-shadow {
       box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.15);
     }
+    @media print {
+  /* 브라우저 기본 여백 제거 및 가로 방향(Landscape) 지정 */
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  body {
+    background: white !important;
+    overflow: visible !important;
+    display: block !important;
+    height: auto !important;
+  }
+
+  /* 프레젠테이션 컨테이너 제약 해제 */
+  #presentation-area {
+    width: 100% !important;
+    max-width: none !important;
+    box-shadow: none !important;
+    aspect-ratio: auto !important;
+    overflow: visible !important;
+  }
+
+  /* 인쇄 시 불필요한 내비게이션, 버튼, 상단바 숨김 */
+  header, 
+  #global-header, 
+  #controls, 
+  #return-agenda-btn, 
+  .action-nav-bar, 
+  button {
+    display: none !important;
+  }
+
+  /* 모든 슬라이드를 순서대로 페이지마다 1장씩 강제 분할 출력 */
+  .slide {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    display: flex !important;
+    box-sizing: border-box !important;
+    padding-top: 40px !important; /* 상단바가 사라진 만큼 여백 보정 */
+  }
+
+  /* 배경색과 디자인 그래픽 강제 인쇄 유지 */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
   </style>
 </head>
 <body>
