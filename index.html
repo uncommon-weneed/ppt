@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>핵심 원생 4인 상담 현황 브리핑</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- 눈에 띄고 세련된 산세리프체 (Pretendard) 적용 -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  
+  <style>
+    :root {
+      --primary: #1a2a3a; /* 구글 슬라이드 스타일 다크 네이비 */
+      --accent: #4285f4;  /* 구글 블루 */
+      --bg-light: #f8f9fa; /* 구글 백그라운드 그레이 */
+      --text-main: #202124;
+      --text-sub: #5f6368;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+      background-color: #e8eaed; /* 캔버스 배경 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    #presentation-area {
+      width: 96vw;
+      max-width: 1560px;
+      aspect-ratio: 16 / 9;
+      background: white;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 구글 슬라이드 느낌의 테두리 디자인 */
+    .slide-border {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: var(--accent);
+      z-index: 100;
+    }
+
+    /* 부드럽고 생동감 있는 전환 효과 (Fade & Slide) */
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); /* 생동감 있는 이징 */
+      pointer-events: none;
+      transform: translateX(40px) scale(0.98); /* 살짝 밀려나고 작아진 상태 */
+      box-sizing: border-box;
+      background: white;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0) scale(1); /* 원래 위치와 크기로 복귀 */
+      z-index: 10;
+    }
+
+    .slide.prev-out {
+      opacity: 0;
+      transform: translateX(-40px) scale(0.98); /* 왼쪽으로 빠짐 */
+    }
+
+    /* Controls */
+    #controls {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      background: rgba(32, 33, 36, 0.8);
+      padding: 8px 24px;
+      border-radius: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      backdrop-filter: blur(5px);
+    }
+
+    .control-btn {
+      background: transparent;
+      color: white;
+      border: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .control-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    #slide-indicator {
+      font-weight: 500;
+      color: white;
+      font-size: 15px;
+      letter-spacing: 1px;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .card-shadow {
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+    .card-shadow:hover {
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="presentation-area">
+    <div class="slide-border"></div>
+    
+    <!-- Slide 1: Title -->
+    <div class="slide active flex flex-col justify-center items-center text-center" style="background: var(--bg-light); padding: 80px 100px;">
+      <div class="w-20 h-20 bg-blue-500 rounded-2xl flex items-center justify-center mb-8 shadow-lg">
+        <i class="fa-solid fa-users-viewfinder text-white text-4xl"></i>
+      </div>
+      <h1 class="text-slate-900 font-extrabold text-[64px] leading-tight tracking-tight mb-6">
+        핵심 원생 4인 학습 진단 및<br>상담 현황 브리핑
+      </h1>
+      <div class="w-16 h-1 bg-blue-500 mb-6"></div>
+      <p class="text-slate-500 text-3xl mb-3 font-semibold">
+        회의 보고 자료
+      </p>
+      <p class="text-blue-600 text-2xl font-extrabold bg-blue-50 px-6 py-2.5 rounded-full mt-4">
+        대상 : 이은채, 김승윤, 박정원, 최시하
+      </p>
+    </div>
+
+    <!-- Slide 2: Agenda -->
+    <div class="slide flex flex-col" style="padding: 50px 80px;">
+      <div class="mb-12">
+        <span class="text-blue-600 font-bold tracking-widest text-base uppercase font-extrabold">AGENDA</span>
+        <h2 class="text-5xl font-black text-slate-900 tracking-tight mt-2">주요 브리핑 안건</h2>
+      </div>
+      <div class="flex flex-col gap-5 flex-grow justify-center w-full max-w-4xl mx-auto">
+        <div class="flex items-center bg-white p-6 rounded-xl border border-slate-200 card-shadow">
+          <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-black text-2xl mr-6 shrink-0">1</div>
+          <h3 class="text-2xl font-black text-slate-900">이은채 (Stella) <span class="text-slate-600 font-bold ml-3 text-[22px]">- 성취도 저하 및 보충 학습 관리 현황</span></h3>
+        </div>
+        <div class="flex items-center bg-white p-6 rounded-xl border border-slate-200 card-shadow">
+          <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-black text-2xl mr-6 shrink-0">2</div>
+          <h3 class="text-2xl font-black text-slate-900">김승윤 <span class="text-slate-600 font-bold ml-3 text-[22px]">- 단어 학습 방식에 대한 학부모 우려 및 대응</span></h3>
+        </div>
+        <div class="flex items-center bg-white p-6 rounded-xl border border-slate-200 card-shadow">
+          <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-black text-2xl mr-6 shrink-0">3</div>
+          <h3 class="text-2xl font-black text-slate-900">박정원 (Clara) <span class="text-slate-600 font-bold ml-3 text-[22px]">- 외부 평가로 인한 오해 불식 및 신뢰 회복</span></h3>
+        </div>
+        <div class="flex items-center bg-white p-6 rounded-xl border border-slate-200 card-shadow">
+          <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-black text-2xl mr-6 shrink-0">4</div>
+          <h3 class="text-2xl font-black text-slate-900">최시하 <span class="text-slate-600 font-bold ml-3 text-[22px]">- 가정 내 학습 마찰로 인한 휴식 결정 및 복귀 여지</span></h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: 이은채 Abstract -->
+    <div class="slide flex flex-col" style="background: var(--bg-light); padding: 45px 70px;">
+      <div class="mb-10">
+        <span class="inline-block py-1 px-4 rounded-full bg-rose-100 text-rose-700 font-extrabold text-sm tracking-widest mb-2 font-black shadow-sm">STUDENT 01 : 이은채 (STELLA)</span>
+        <h2 class="text-4xl font-black text-slate-900 tracking-tight">Abstract : 성취도 저하 이슈 및 원내 밀착 보충 합의</h2>
+      </div>
+      
+      <div class="flex gap-6 w-full flex-grow items-stretch">
+        <div class="flex-1 bg-white rounded-xl card-shadow border-t-4 border-rose-500 flex flex-col p-8">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 mr-4">
+              <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900">현상 진단</h3>
+          </div>
+          <ul class="flex flex-col gap-5 text-[29px] text-slate-800 font-bold leading-snug">
+            <li class="flex items-start"><i class="fa-solid fa-check text-rose-500 mt-1.5 mr-3 text-4xl shrink-0"></i>잦은 지각으로 인한 초반 학습 누락 및 낮은 시험 점수</li>
+            <li class="flex items-start"><i class="fa-solid fa-check text-rose-500 mt-1.5 mr-3 text-4xl shrink-0"></i>스펠링 및 어휘량 부족으로 라이팅 등 학업 진도 소화에 어려움 호소</li>
+          </ul>
+        </div>
+        
+        <div class="flex-1 bg-white rounded-xl card-shadow border-t-4 border-blue-500 flex flex-col p-8">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 mr-4">
+              <i class="fa-solid fa-comments text-lg"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900">학부모 상담 핵심</h3>
+          </div>
+          <ul class="flex flex-col gap-5 text-[29px] text-slate-800 font-bold leading-snug">
+            <li class="flex items-start"><i class="fa-solid fa-check text-blue-500 mt-1.5 mr-3 text-lg shrink-0"></i>학부모 역시 "집에서 온라인만 겨우 시키고 있다"며 가정 내 케어 한계 인정</li>
+            <li class="flex items-start"><i class="fa-solid fa-check text-blue-500 mt-1.5 mr-3 text-lg shrink-0"></i>지각 방지를 위한 하원 시간 조정(5분) 요청 및 원내 남기기 제안</li>
+          </ul>
+        </div>
+
+        <div class="flex-1 bg-white rounded-xl card-shadow border-t-4 border-emerald-500 flex flex-col p-8">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500 mr-4">
+              <i class="fa-solid fa-handshake text-lg"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900">상담 결과 도출</h3>
+          </div>
+          <ul class="flex flex-col gap-5 text-[29px] text-slate-800 font-bold leading-snug">
+            <li class="flex items-start"><i class="fa-solid fa-check text-emerald-500 mt-1.5 mr-3 text-lg shrink-0"></i>방학 및 10월 한 달간 매주 화요일 하원 전 30분 '단어 집중 보충' 합의</li>
+            <li class="flex items-start"><i class="fa-solid fa-check text-emerald-500 mt-1.5 mr-3 text-lg shrink-0"></i>강사의 꼼꼼한 관리 의지에 학부모가 긍정적으로 협조하며 이탈 방어 중</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: 이은채 Detail 1 -->
+    <div class="slide flex flex-col" style="padding: 45px 80px;">
+      <div class="mb-10">
+        <span class="inline-block py-1 px-4 rounded-full bg-slate-100 text-slate-700 font-bold text-sm tracking-widest mb-2 font-black">STUDENT 01 : COUNSELING DETAIL</span>
+        <h2 class="text-4xl font-black text-slate-900 tracking-tight">상세 상담 내용 1 : 지각 이슈 및 태도 점검</h2>
+      </div>
+      
+      <div class="flex flex-col gap-6 flex-grow justify-center">
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-clock text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">초기 지각 및 학습 결손 포착</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>수업 시간에 늦게 도착하는 빈도가 높아 음가 리뷰 등 주요 도입부를 놓침</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>같이 시작할 때는 잘 따라오나, 진도가 누적되며 또래보다 작업 속도가 느려짐</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>시험 점수(퀴즈)의 업다운 편차가 크게 발생함</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-users text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">학부모 면담 시 원인 분석 및 권고</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>학교 종료 후 이동 시간 문제 확인. 원에서 "학교 시간을 5분만 일찍 마쳐달라" 요청</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>어머님 왈: "충분히 올 수 있는 시간인데, 아이 성향상 느리게 걷다 보니 늦는 것 같다"</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>가정 내 PC가 없어 'C-Learning'을 통한 결손 보충에 물리적 한계가 존재함을 확인</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: 이은채 Detail 2 -->
+    <div class="slide flex flex-col" style="padding: 45px 80px;">
+      <div class="mb-10">
+        <span class="inline-block py-1 px-4 rounded-full bg-slate-100 text-slate-700 font-bold text-sm tracking-widest mb-2 font-black">STUDENT 01 : COUNSELING DETAIL</span>
+        <h2 class="text-4xl font-black text-slate-900 tracking-tight">상세 상담 내용 2 : 단어 암기 솔루션 도출 과정</h2>
+      </div>
+      
+      <div class="flex flex-col gap-6 flex-grow justify-center">
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-magnifying-glass-chart text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">어휘력 부족에 대한 강사의 선제적 진단</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>청크 패턴 문장 이해도나 수업 참여도는 적극적이고 우수함</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>그러나 다음 레벨 소화를 위해 필수적인 '스펠링 암기' 및 '절대적 어휘량'이 부족</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-lightbulb text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">강사의 보충 제안 및 학부모의 수용</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>학부모 역시 단어 암기의 어려움을 인지하고 방학 기간 동안 학원 체류 학습 문의</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>원: "매주 화요일 정규 수업 후 30~40분 남아 단어 암기 진행 후 개별 하원 가능"</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>어머님: "이후 피아노 학원으로 걸어가면 되니 좋다. 열심히 해보겠다"고 흔쾌히 수용</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>결과적으로 학원의 적극적 방안 제시로 학부모의 신뢰를 구축함</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: 김승윤 Abstract -->
+    <div class="slide flex flex-col" style="background: var(--bg-light); padding: 45px 70px;">
+      <div class="mb-10">
+        <span class="inline-block py-1 px-4 rounded-full bg-amber-100 text-amber-700 font-extrabold text-sm tracking-widest mb-2 font-black shadow-sm">STUDENT 02 : 김승윤</span>
+        <h2 class="text-4xl font-black text-slate-900 tracking-tight">Abstract : 학부모의 불안감 인지 및 학습 과도기 설득</h2>
+      </div>
+      
+      <div class="flex gap-6 w-full flex-grow items-stretch">
+        <div class="flex-1 bg-white rounded-xl card-shadow border-t-4 border-rose-500 flex flex-col p-8">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 mr-4">
+              <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900">현상 진단</h3>
+          </div>
+          <ul class="flex flex-col gap-5 text-[29px] text-slate-800 font-bold leading-snug">
+            <li class="flex items-start"><i class="fa-solid fa-check text-rose-500 mt-1.5 mr-3 text-lg shrink-0"></i>가정 내 단어 시험은 만점이나, 학원 퀴즈 성적은 저조하여 학부모 컴플레인 우려 발생</li>
+            <li class="flex items-start"><i class="fa-solid fa-check text-rose-500 mt-1.5 mr-3 text-lg shrink-0"></i>한국어 뜻을 보고 영단어를 적는 과정에서 혼동(발음 실수 등) 발생</li>
+          </ul>
+        </div>
+        
+        <div class="flex-1 bg-white rounded-xl card-shadow border-t-4 border-blue-500 flex flex-col p-8">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 mr-4">
+              <i class="fa-solid fa-comments text-lg"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900">학부모 상담 핵심</h3>
+          </div>
+          <ul class="flex flex-col gap-5 text-[29px] text-slate-800 font-bold leading-snug">
+            <li class="flex items-start"><i class="fa-solid fa-check text-blue-500 mt-1.5 mr-3 text-lg shrink-0"></i>어머님: "결과가 저조한데 현재 공부 방식이 맞는 것인지 의문이다"며 불안감 표출</li>
+            <li class="flex items-start"><i class="fa-solid fa-check text-blue-500 mt-1.5 mr-3 text-lg shrink-0"></i>원: 승윤이가 절대 뒤처진 것이 아니며, 어휘 확장기에 겪는 자연스러운 현상임을 어필</li>
+          </ul>
+        </div>
+
+        <div class="flex-1 bg-white rounded-xl card-shadow border-t-4 border-emerald-500 flex flex-col p-8">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500 mr-4">
+              <i class="fa-solid fa-handshake text-lg"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900">상담 결과 도출</h3>
+          </div>
+          <ul class="flex flex-col gap-5 text-[29px] text-slate-800 font-bold leading-snug">
+            <li class="flex items-start"><i class="fa-solid fa-check text-emerald-500 mt-1.5 mr-3 text-lg shrink-0"></i>가정에서는 한글 뜻을 꼼꼼히 리뷰하도록 가이드하고, 아이를 향한 지속적 격려 요청</li>
+            <li class="flex items-start"><i class="fa-solid fa-check text-emerald-500 mt-1.5 mr-3 text-lg shrink-0"></i>학원의 체계적 커리큘럼(과도기 극복 과정)을 논리적으로 설명하여 학부모 안심시킴</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: 김승윤 Detail 1 -->
+    <div class="slide flex flex-col" style="padding: 45px 80px;">
+      <div class="mb-10">
+        <span class="inline-block py-1 px-4 rounded-full bg-slate-100 text-slate-700 font-bold text-sm tracking-widest mb-2 font-black">STUDENT 02 : COUNSELING DETAIL</span>
+        <h2 class="text-4xl font-black text-slate-900 tracking-tight">상세 상담 내용 1 : 학부모의 학습 방식 의구심 발생</h2>
+      </div>
+      
+      <div class="flex flex-col gap-6 flex-grow justify-center">
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-list-check text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">강사의 학생 학습 상태 진단</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>청크북 숙제는 매우 성실하게 완료하고 있음</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>스펠링을 물어보면 대답은 잘 하나, '한국어 뜻을 보고 적는' 단계에서 혼동 포착</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>문장은 잘 읽지만 새로운 어휘의 발음 실수가 있고, 세부 정보 파악을 놓치는 경향</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-phone-volume text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">학부모의 직접적인 불안감 표출</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>어머님 면담 시: "단어 공부를 시켜서 집에서는 다 맞는데, 학원 시험은 점수가 낮다"</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>이로 인해 "지금 학원에서 지도하는 이 방식(과정)이 맞는 것이냐"며 강한 의구심 표현</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: 김승윤 Detail 2 -->
+    <div class="slide flex flex-col" style="padding: 45px 80px;">
+      <div class="mb-10">
+        <span class="inline-block py-1 px-4 rounded-full bg-slate-100 text-slate-700 font-bold text-sm tracking-widest mb-2 font-black">STUDENT 02 : COUNSELING DETAIL</span>
+        <h2 class="text-4xl font-black text-slate-900 tracking-tight">상세 상담 내용 2 : 강사의 논리적 설득 및 신뢰 회복</h2>
+      </div>
+      
+      <div class="flex flex-col gap-6 flex-grow justify-center">
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-shield-halved text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">학습 '과도기' 논리를 통한 불안감 차단</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>어머님께 현재 레벨이 '어휘량이 폭발적으로 늘어나는 시점'임을 명확히 인지시킴</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>학습적으로 체계를 잡아가는 과정이며, 다른 학생들도 모두 이 구간을 거친다고 설명</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-hand-holding-heart text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">학생에 대한 확신 부여 및 가정 내 역할 가이드</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>원: "승윤이는 결코 뒤처지는 아이가 아니다. 다시 짚어주면 올바르게 바로 대답한다."</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>가정에서 한국어 뜻 리뷰를 더 꼼꼼히 진행해 줄 것을 요청</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>현재는 성장하는 '과정'이므로 학원 결과를 탓하기보다 꾸준한 격려가 필요함을 당부</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9: 박정원 Abstract -->
+    <div class="slide flex flex-col" style="background: var(--bg-light); padding: 45px 70px;">
+      <div class="mb-10">
+        <span class="inline-block py-1 px-4 rounded-full bg-emerald-100 text-emerald-700 font-extrabold text-sm tracking-widest mb-2 font-black shadow-sm">STUDENT 03 : 박정원 (CLARA)</span>
+        <h2 class="text-4xl font-black text-slate-900 tracking-tight">Abstract : 외부 평가로 인한 오해 발생 및 데이터 기반 방어</h2>
+      </div>
+      
+      <div class="flex gap-6 w-full flex-grow items-stretch">
+        <div class="flex-1 bg-white rounded-xl card-shadow border-t-4 border-rose-500 flex flex-col p-8">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 mr-4">
+              <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900">현상 진단</h3>
+          </div>
+          <ul class="flex flex-col gap-5 text-[29px] text-slate-800 font-bold leading-snug">
+            <li class="flex items-start"><i class="fa-solid fa-check text-rose-500 mt-1.5 mr-3 text-lg shrink-0"></i>파닉스 이해도/참여도 매우 우수하나, 라이팅에서 일시적인 철자 순서 혼동 발생</li>
+            <li class="flex items-start"><i class="fa-solid fa-check text-rose-500 mt-1.5 mr-3 text-lg shrink-0"></i>영어를 업으로 하는 '이모'의 평가(알파벳도 모른다)로 학부모의 긴급 점검 요청</li>
+          </ul>
+        </div>
+        
+        <div class="flex-1 bg-white rounded-xl card-shadow border-t-4 border-blue-500 flex flex-col p-8">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 mr-4">
+              <i class="fa-solid fa-comments text-lg"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900">학부모 상담 핵심</h3>
+          </div>
+          <ul class="flex flex-col gap-5 text-[29px] text-slate-800 font-bold leading-snug">
+            <li class="flex items-start"><i class="fa-solid fa-check text-blue-500 mt-1.5 mr-3 text-lg shrink-0"></i>어머님: "음가 혼동은 이해하지만 진짜 알파벳을 모르는 건 아닌지 원의 판단이 궁금하다"</li>
+            <li class="flex items-start"><i class="fa-solid fa-check text-blue-500 mt-1.5 mr-3 text-lg shrink-0"></i>원: 퀴즈 실데이터(kitchen 사례)를 제시하며 알파벳을 모른다는 지적을 완벽히 반박</li>
+          </ul>
+        </div>
+
+        <div class="flex-1 bg-white rounded-xl card-shadow border-t-4 border-emerald-500 flex flex-col p-8">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500 mr-4">
+              <i class="fa-solid fa-handshake text-lg"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900">상담 결과 도출</h3>
+          </div>
+          <ul class="flex flex-col gap-5 text-[29px] text-slate-800 font-bold leading-snug">
+            <li class="flex items-start"><i class="fa-solid fa-check text-emerald-500 mt-1.5 mr-3 text-lg shrink-0"></i>새로운 음가를 쓰기에 적용할 때 나타나는 '업다운(Up-Down) 구간'임을 설명</li>
+            <li class="flex items-start"><i class="fa-solid fa-check text-emerald-500 mt-1.5 mr-3 text-lg shrink-0"></i>객관적인 학원 성과(스타터 레벨 통과 등)를 상기시켜 학부모의 동요를 완벽히 차단</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: 박정원 Detail 1 -->
+    <div class="slide flex flex-col" style="padding: 45px 80px;">
+      <div class="mb-10">
+        <span class="inline-block py-1 px-4 rounded-full bg-slate-100 text-slate-700 font-bold text-sm tracking-widest mb-2 font-black">STUDENT 03 : COUNSELING DETAIL</span>
+        <h2 class="text-4xl font-black text-slate-900 tracking-tight">상세 상담 내용 1 : 학부모의 긴급 연락 및 외부 평가 이슈</h2>
+      </div>
+      
+      <div class="flex flex-col gap-6 flex-grow justify-center">
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-star text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">교실 내 압도적으로 우수한 파닉스 성취도</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>항상 활기차고, 간단한 단어를 정확하게 읽고 발음하며 이해도가 뛰어난 모범생</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>가끔 수업 전 숙제를 미리 완료할 정도로 학습 의욕이 높음</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-user-ninja text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">외부인(이모)의 단편적 평가로 인한 학부모의 동요</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>영어 관련 일을 하시는 이모가 정원이의 퀴즈 공부를 봐주던 중 이슈 발생</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>이모 왈: "'kitchen'을 'chicken'으로 적는다. 이 아이는 알파벳 자체를 모르는 것 같다."</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>이에 놀란 어머님이 "음가 혼동은 이해하나 진짜 알파벳을 모르는 상태인지" 원으로 긴급 문의</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 11: 박정원 Detail 2 -->
+    <div class="slide flex flex-col" style="padding: 45px 80px;">
+      <div class="mb-10">
+        <span class="inline-block py-1 px-4 rounded-full bg-slate-100 text-slate-700 font-bold text-sm tracking-widest mb-2 font-black">STUDENT 03 : COUNSELING DETAIL</span>
+        <h2 class="text-4xl font-black text-slate-900 tracking-tight">상세 상담 내용 2 : 팩트 체크 및 확고한 원의 스탠스 전달</h2>
+      </div>
+      
+      <div class="flex flex-col gap-6 flex-grow justify-center">
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-file-contract text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">실제 퀴즈 데이터 기반의 즉각적인 오해 불식</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>원 확인 결과: 퀴즈에서 'kitchen'의 't' 하나만 누락했을 뿐 나머지 스펠링은 모두 정확했음</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>스펠링 기재 시 순서 혼동이 있을 순 있으나, 결코 음가나 알파벳을 모르는 것이 아님을 단언</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-chart-line text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">'업다운(Up-Down) 구간' 논리를 통한 전문가적 설명</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>원: "알파벳을 몰랐다면 현 레벨을 배정받지 못했으며, 전 단계인 스타터에서도 매우 잘했다."</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>현재는 파닉스 배운 음가를 새로운 것에 적용하는 과정이라 라이팅에서 기복이 생기는 시기임</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>원내 지속적인 복습과 가정의 온라인 학습(C-learning) 병행을 안내하며 상황을 깔끔히 정리</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 12: 최시하 Abstract -->
+    <div class="slide flex flex-col" style="background: var(--bg-light); padding: 45px 70px;">
+      <div class="mb-10">
+        <span class="inline-block py-1 px-4 rounded-full bg-violet-100 text-violet-700 font-extrabold text-sm tracking-widest mb-2 font-black shadow-sm">STUDENT 04 : 최시하</span>
+        <h2 class="text-4xl font-black text-slate-900 tracking-tight">Abstract : 가정 내 학습 마찰로 인한 휴식 결정 및 복귀 여지</h2>
+      </div>
+      
+      <div class="flex gap-6 w-full flex-grow items-stretch">
+        <div class="flex-1 bg-white rounded-xl card-shadow border-t-4 border-rose-500 flex flex-col p-8">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 mr-4">
+              <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900">현상 진단</h3>
+          </div>
+          <ul class="flex flex-col gap-5 text-[29px] text-slate-800 font-bold leading-snug">
+            <li class="flex items-start"><i class="fa-solid fa-check text-rose-500 mt-1.5 mr-3 text-lg shrink-0"></i>수업 이해도, 토론 참여도 등 원내 생활은 완벽하나 '숙제/단어 암기' 스트레스 극심</li>
+            <li class="flex items-start"><i class="fa-solid fa-check text-rose-500 mt-1.5 mr-3 text-lg shrink-0"></i>레벨업 후 증가한 학습량으로 인해 가정 내에서 마찰(트러블) 심화</li>
+          </ul>
+        </div>
+        
+        <div class="flex-1 bg-white rounded-xl card-shadow border-t-4 border-blue-500 flex flex-col p-8">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 mr-4">
+              <i class="fa-solid fa-comments text-lg"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900">학부모 상담 핵심</h3>
+          </div>
+          <ul class="flex flex-col gap-5 text-[29px] text-slate-800 font-bold leading-snug">
+            <li class="flex items-start"><i class="fa-solid fa-check text-blue-500 mt-1.5 mr-3 text-lg shrink-0"></i>어머님: "초반부터 단어 암기를 너무 힘들어했다. 억지로 이어가기보다 쉬는 게 맞다."</li>
+            <li class="flex items-start"><i class="fa-solid fa-check text-blue-500 mt-1.5 mr-3 text-lg shrink-0"></i>원: 시하의 훌륭한 수업 역량을 칭찬하며 아쉬움을 표현함</li>
+          </ul>
+        </div>
+
+        <div class="flex-1 bg-white rounded-xl card-shadow border-t-4 border-emerald-500 flex flex-col p-8">
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500 mr-4">
+              <i class="fa-solid fa-handshake text-lg"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900">상담 결과 도출</h3>
+          </div>
+          <ul class="flex flex-col gap-5 text-[29px] text-slate-800 font-bold leading-snug">
+            <li class="flex items-start"><i class="fa-solid fa-check text-emerald-500 mt-1.5 mr-3 text-lg shrink-0"></i>학원에 대한 불만은 전혀 없으며 ("아이는 학원 가는 걸 재미있어 한다")</li>
+            <li class="flex items-start"><i class="fa-solid fa-check text-emerald-500 mt-1.5 mr-3 text-lg shrink-0"></i>완전한 퇴원이 아닌 "좀 쉬다가 다시 연락주겠다"는 긍정적 여지를 남기며 마무리</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 13: 최시하 Detail 1 -->
+    <div class="slide flex flex-col" style="padding: 45px 80px;">
+      <div class="mb-10">
+        <span class="inline-block py-1 px-4 rounded-full bg-slate-100 text-slate-700 font-bold text-sm tracking-widest mb-2 font-black">STUDENT 04 : COUNSELING DETAIL</span>
+        <h2 class="text-4xl font-black text-slate-900 tracking-tight">상세 상담 내용 1 : 원내에서의 완벽한 수업 퍼포먼스</h2>
+      </div>
+      
+      <div class="flex flex-col gap-6 flex-grow justify-center">
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-award text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">다방면에서 뛰어난 기량을 보여준 최상위권 태도</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>조용하지만 집중력이 뛰어나며, 수업 주제 토론에 매우 적극적으로 참여함</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>스스로 공통점/차이점을 파악하는 그래픽 오거나이저를 완성할 정도로 이해력이 높음</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>듣기 요약 및 문법(소유격/대명사) 개념도 완벽하게 흡수함</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-arrow-up-right-dots text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">레벨업에 따른 학습량 증가</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>뛰어난 역량을 바탕으로 '스프(Sprout)' 레벨로 진급하였으나, 이에 따른 학습량 급증</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>원에 있을 때는 문제가 없으나, 집에서 처리해야 할 과제 로드가 커짐</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 14: 최시하 Detail 2 -->
+    <div class="slide flex flex-col" style="padding: 45px 80px;">
+      <div class="mb-10">
+        <span class="inline-block py-1 px-4 rounded-full bg-slate-100 text-slate-700 font-bold text-sm tracking-widest mb-2 font-black">STUDENT 04 : COUNSELING DETAIL</span>
+        <h2 class="text-4xl font-black text-slate-900 tracking-tight">상세 상담 내용 2 : 퇴원 결정 과정 및 잠재적 재등록 확보</h2>
+      </div>
+      
+      <div class="flex flex-col gap-6 flex-grow justify-center">
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-house-chimney-crack text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">가정 내 단어장/숙제로 인한 스트레스 한계 도달</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>어머님 상담: "초기부터 단어장 숙제와 암기를 너무 힘들어했다."</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>이 문제로 가정 내에서 계속 마찰이 발생하여 억지로 끌고 가기보다 휴식을 결정함</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl overflow-hidden card-shadow">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center">
+            <i class="fa-solid fa-heart-circle-check text-blue-500 mr-3 text-xl"></i>
+            <h3 class="text-2xl font-black text-slate-900">원내 불만이 아닌 '과제 부담'에 의한 자발적 휴식 인정</h3>
+          </div>
+          <div class="px-8 py-5 bg-white">
+            <ul class="flex flex-col gap-4 text-[24px] text-slate-800 font-bold leading-normal">
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>어머님: "학원 커리큘럼이나 수업에 대한 불만은 없다. 아이도 학원 가는 건 재밌어한다."</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>강사 역시 시하가 수업 이해도를 잘 따라왔던 훌륭한 학생이었음을 강하게 칭찬함</li>
+              <li class="flex"><span class="text-blue-600 mr-3 font-black text-2xl leading-none">•</span>어머님이 직접 "좀 쉬다가 다시 보내달라 할 것 같다. 나중에 다시 연락주겠다"며 복귀 여지 확약</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 15: Closing & Commitment (New Slide) -->
+    <div class="slide flex flex-col items-center justify-center text-center" style="background: var(--primary); padding: 80px 100px;">
+      <span class="inline-block py-1 px-4 rounded-full bg-blue-500/20 text-blue-300 font-bold text-xs tracking-widest mb-6 border border-blue-400/30 shadow-sm">CLOSING & COMMITMENT</span>
+      
+      <h2 class="text-5xl font-black text-white tracking-tight mb-8">
+        향후 관리 계획 및 마무리 인사
+      </h2>
+
+      <div class="flex gap-6 w-full max-w-5xl mb-12 text-left">
+        <!-- Card 1 -->
+        <div class="flex-1 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all">
+          <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white mb-4">
+            <i class="fa-solid fa-eye text-xl"></i>
+          </div>
+          <h3 class="text-2xl font-black text-white mb-2">선제적 리스크 관리</h3>
+          <p class="text-blue-100 text-[19px] font-semibold leading-relaxed">
+            성취도 하락 및 과제 부담 등 작은 이탈 징후도 놓치지 않고 조기 개입하여 퇴원을 선제적으로 방어하겠습니다.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="flex-1 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all">
+          <div class="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center text-white mb-4">
+            <i class="fa-solid fa-handshake-simple text-xl"></i>
+          </div>
+          <h3 class="text-2xl font-black text-white mb-2">학부모 신뢰 강화</h3>
+          <p class="text-emerald-100 text-[19px] font-semibold leading-relaxed">
+            학원의 커리큘럼을 확신하실 수 있도록, 객관적인 데이터와 전문가적 소견으로 학부모님의 불안을 해소하겠습니다.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="flex-1 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all">
+          <div class="w-12 h-12 rounded-full bg-rose-500 flex items-center justify-center text-white mb-4">
+            <i class="fa-solid fa-arrow-trend-up text-xl"></i>
+          </div>
+          <h3 class="text-2xl font-black text-white mb-2">안정적 레벨업 지원</h3>
+          <p class="text-rose-100 text-[19px] font-semibold leading-relaxed">
+            퇴원 위기를 넘긴 원생들이 다시 영어에 흥미를 느끼고, 다음 학기에 안정적으로 도약할 수 있도록 책임지고 지도하겠습니다.
+          </p>
+        </div>
+      </div>
+
+      <div class="w-24 h-1 bg-blue-500/50 mb-8"></div>
+      
+      <p class="text-3xl font-bold text-slate-200 leading-relaxed italic">
+        "학생 한 명 한 명의 성장이 학원의 성과로 이어질 수 있도록<br>흔들림 없는 학급 관리를 이끌어내겠습니다. 감사합니다."
+      </p>
+    </div>
+
+    <!-- Controls -->
+    <div id="controls">
+      <button class="control-btn" id="prev-btn" title="이전 슬라이드 (또는 왼쪽 화살표)"><i class="fa-solid fa-chevron-left"></i></button>
+      <div id="slide-indicator">1 / 15</div>
+      <button class="control-btn" id="next-btn" title="다음 슬라이드 (또는 오른쪽 화살표/스페이스바)"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const slides = document.querySelectorAll('.slide');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const indicator = document.getElementById('slide-indicator');
+      let currentSlide = 0;
+
+      function updateSlides() {
+        slides.forEach((slide, index) => {
+          slide.classList.remove('active', 'prev-out');
+          if (index === currentSlide) {
+            slide.classList.add('active'); // 현재 슬라이드는 fade-in & 원래 위치로
+          } else if (index < currentSlide) {
+            slide.classList.add('prev-out'); // 이전 슬라이드들은 왼쪽으로 slide-out
+          }
+          // index > currentSlide 인 슬라이드들은 기본 상태 (오른쪽에 대기, 투명)
+        });
+        indicator.innerText = `${currentSlide + 1} / ${slides.length}`;
+      }
+
+      function nextSlide() {
+        if (currentSlide < slides.length - 1) {
+          currentSlide++;
+          updateSlides();
+        }
+      }
+
+      function prevSlide() {
+        if (currentSlide > 0) {
+          currentSlide--;
+          updateSlides();
+        }
+      }
+
+      nextBtn.addEventListener('click', nextSlide);
+      prevBtn.addEventListener('click', prevSlide);
+
+      // 키보드 네비게이션 추가 (화살표 키로 구글 슬라이드처럼 조작)
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'Space') {
+          nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+          prevSlide();
+        }
+      });
+
+      // 초기화
+      updateSlides();
+    });
+  </script>
+</body>
+</html>
