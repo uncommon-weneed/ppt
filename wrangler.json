@@ -1,0 +1,20 @@
+{
+  "name": "ppt",
+  "compatibility_date": "2026-09-30",
+  "assets": {
+    "directory": "./"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "board-db",
+      "database_id": "여기에_D1_DATABASE_ID_입력"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "board-images"
+    }
+  ]
+}
