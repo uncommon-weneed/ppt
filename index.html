@@ -1,1035 +1,154 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>주요 원생 4인 학습 현황 및 학부모 상담 공유</title>
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  
-  <style>
-    :root {
-      --primary: #1e293b;
-      --accent: #2563eb;
-      --bg-light: #f8fafc;
-    }
-    
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-      background-color: #0f172a;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      overflow: hidden;
-      touch-action: pan-y pinch-zoom;
-    }
-
-    #presentation-area {
-      width: 96vw;
-      max-width: 1560px;
-      aspect-ratio: 16 / 9;
-      background: white;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .slide-border {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 6px;
-      background: var(--accent);
-      z-index: 100;
-    }
-
-    .slide {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      transition: all 0.35s ease;
-      pointer-events: none;
-      transform: translateX(30px) scale(0.99);
-      box-sizing: border-box;
-      background: white;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .slide.active {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateX(0) scale(1);
-      z-index: 10;
-    }
-
-    .slide.prev-out {
-      opacity: 0;
-      transform: translateX(-30px) scale(0.99);
-    }
-
-    /* 카드 클릭 시 뒤쪽 화면 오퍼시티 효과 */
-    .slide.has-expanded > *:not(#modal-backdrop):not(.slide-card-container):not(.side-nav-arrow) {
-      opacity: 0.25;
-      transition: opacity 0.3s ease;
-      filter: blur(1px);
-    }
-    .slide-card-container.has-expanded .row-card:not(.expanded) {
-      opacity: 0.2;
-      transform: scale(0.97);
-      filter: blur(1px);
-      pointer-events: auto;
-    }
-
-    #return-agenda-btn {
-      position: absolute;
-      top: 24px;
-      right: 32px;
-      z-index: 120;
-      background: #ffffff;
-      color: #1e293b;
-      border: 2px solid #cbd5e1;
-      padding: 10px 24px;
-      border-radius: 24px;
-      font-size: 16px;
-      font-weight: 800;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-    }
-    #return-agenda-btn:hover {
-      background: #2563eb;
-      color: white;
-      border-color: #2563eb;
-      transform: translateY(-2px);
-    }
-
-    /* 좌우 희미한 슬라이드 이동 화살표 */
-    .side-nav-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 110;
-      background: rgba(15, 23, 42, 0.15);
-      color: #334155;
-      border: none;
-      width: 50px;
-      height: 90px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 24px;
-      transition: all 0.25s ease;
-      opacity: 0.35;
-    }
-    .side-nav-arrow:hover {
-      opacity: 0.9;
-      background: rgba(15, 23, 42, 0.7);
-      color: white;
-    }
-    #prev-slide-arrow { left: 16px; }
-    #next-slide-arrow { right: 16px; }
-
-    .agenda-card {
-      transition: all 0.25s ease;
-      cursor: pointer;
-      border-left: 8px solid transparent;
-    }
-    .agenda-card:hover {
-      transform: translateX(10px);
-      border-left-color: #2563eb;
-      background-color: #eff6ff;
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
-    }
-
-    /* 평상시 가로형 카드 스타일 */
-    .row-card {
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      border: 2.5px solid #e2e8f0;
-      border-radius: 20px;
-      background-color: #ffffff;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      padding: 26px 40px;
-      gap: 36px;
-      position: relative;
-    }
-    .row-card:hover:not(.expanded) {
-      transform: translateY(-4px);
-      border-color: #94a3b8;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-      background-color: #f8fafc;
-    }
-    
-    /* 카드 클릭 시 강조 확대 효과 */
-    .row-card.expanded {
-      transform: scale(1.05);
-      z-index: 50;
-      background: linear-gradient(135deg, #fffbeb 0%, #eff6ff 100%) !important;
-      border-color: #2563eb !important;
-      box-shadow: 0 25px 60px rgba(37, 99, 235, 0.28), 0 0 0 4px rgba(37, 99, 235, 0.35) !important;
-      padding: 34px 48px;
-    }
-    .row-card.expanded .card-badge {
-      background-color: #1e40af !important;
-      color: #ffffff !important;
-      border-color: #1e40af !important;
-      transform: scale(1.15);
-      box-shadow: 0 6px 16px rgba(30, 64, 175, 0.3);
-    }
-    .row-card.expanded ul, 
-    .row-card.expanded p,
-    .row-card.expanded div {
-      color: #0f172a !important;
-      font-size: 1.65rem !important;
-      line-height: 1.8 !important;
-    }
-
-    /* 하단 조작 컨트롤러: 기본 숨김 (P키 또는 콘솔 명령어로 토글) */
-    #controls {
-      position: absolute;
-      bottom: 24px;
-      right: 32px;
-      z-index: 100;
-      display: none;
-      gap: 14px;
-      align-items: center;
-      background: rgba(15, 23, 42, 0.9);
-      padding: 8px 20px;
-      border-radius: 24px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-      backdrop-filter: blur(5px);
-    }
-    .control-btn {
-      background: transparent;
-      color: white;
-      border: none;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 16px;
-      transition: all 0.2s;
-    }
-    .control-btn:hover {
-      background: rgba(255,255,255,0.25);
-    }
-    #slide-indicator {
-      font-weight: 800;
-      color: white;
-      font-size: 16px;
-      min-width: 65px;
-      text-align: center;
-    }
-
-    /* 모바일 반응형 */
-    @media screen and (max-width: 768px) {
-      body {
-        align-items: flex-start;
-        overflow: auto;
-        background-color: #f8fafc;
-      }
-      #presentation-area {
-        width: 100vw;
-        max-width: 100%;
-        min-height: 100vh;
-        height: auto;
-        aspect-ratio: auto;
-        box-shadow: none;
-      }
-      .slide {
-        position: relative;
-        display: none;
-        width: 100%;
-        min-height: 100vh;
-        height: auto;
-        padding: 65px 20px 95px 20px !important;
-        transform: none !important;
-      }
-      .slide.active {
-        display: flex !important;
-      }
-      .row-card {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 16px !important;
-        padding: 22px !important;
-      }
-      .row-card.expanded {
-        transform: scale(1.01) !important;
-        padding: 24px !important;
-      }
-      .row-card.expanded ul, 
-      .row-card.expanded p,
-      .row-card.expanded div {
-        font-size: 1.25rem !important;
-      }
-      .side-nav-arrow {
-        width: 36px;
-        height: 70px;
-        font-size: 18px;
-      }
-      #controls {
-        bottom: 14px;
-        right: 14px;
-      }
-      #return-agenda-btn {
-        top: 14px;
-        right: 14px;
-        padding: 8px 16px;
-        font-size: 14px;
-      }
-    }
-
-    /* 인쇄 전용 스타일 */
-    @media print {
-      @page {
-        size: A4 landscape;
-        margin: 0;
-      }
-      html, body {
-        background: white !important;
-        overflow: visible !important;
-        display: block !important;
-        width: 100% !important;
-        height: auto !important;
-      }
-      #presentation-area {
-        width: 100% !important;
-        max-width: none !important;
-        box-shadow: none !important;
-        aspect-ratio: auto !important;
-        overflow: visible !important;
-      }
-      #controls, #return-agenda-btn, .slide-border, .side-nav-arrow {
-        display: none !important;
-      }
-      .slide {
-        position: relative !important;
-        top: auto !important;
-        left: auto !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        opacity: 1 !important;
-        transform: none !important;
-        pointer-events: auto !important;
-        page-break-after: always !important;
-        break-after: page !important;
-        display: flex !important;
-        box-sizing: border-box !important;
-        padding: 45px 65px !important;
-        background: white !important;
-      }
-      .row-card {
-        border: 2px solid #94a3b8 !important;
-        box-shadow: none !important;
-      }
-      * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>uncommonweneed.shop</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 0 10px; }
+        .box { border: 1px solid #ccc; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .hidden { display: none; }
+        input, textarea, button { width: 100%; margin-bottom: 10px; padding: 8px; box-sizing: border-box; }
+        button { background-color: #0051c3; color: white; border: none; cursor: pointer; font-weight: bold; }
+        .post { border-bottom: 1px solid #eee; padding: 10px 0; }
+        .post img { max-width: 100%; height: auto; margin-top: 10px; border-radius: 4px; }
+    </style>
 </head>
 <body>
 
-  <div id="presentation-area">
-    <div class="slide-border"></div>
+    <h1>게시판 시스템</h1>
 
-    <!-- 좌우 희미한 슬라이드 이동 화살표 -->
-    <button id="prev-slide-arrow" class="side-nav-arrow" onclick="prevSlide()" title="이전 화면">
-      <i class="fa-solid fa-chevron-left"></i>
-    </button>
-    <button id="next-slide-arrow" class="side-nav-arrow" onclick="nextSlide()" title="다음 화면">
-      <i class="fa-solid fa-chevron-right"></i>
-    </button>
-
-    <button id="return-agenda-btn" class="hidden" onclick="goToSlide(1)" title="목차로 복귀 (ESC)">
-      <i class="fa-solid fa-list-ul"></i>
-      <span>목차 보기</span>
-    </button>
-    
-    <!-- 슬라이드 1: 표지 -->
-    <div class="slide active justify-center items-center text-center p-14 bg-slate-50 cursor-pointer select-none" onclick="goToSlide(1)">
-      <div class="inline-block px-7 py-3 rounded-full bg-blue-100 text-blue-800 text-xl font-extrabold mb-8 shadow-sm">
-        원내 학습 및 상담 현황 보고
-      </div>
-      <h1 class="text-slate-900 font-black text-4xl sm:text-6xl md:text-[68px] leading-tight tracking-tight mb-8">
-        학생 4명 학습 진단 및<br>
-        <span class="text-blue-600">학부모 상담 내용</span>
-      </h1>
-      <div class="w-24 h-2 bg-blue-600 mb-8 mx-auto rounded-full"></div>
-      <p class="text-slate-800 text-3xl sm:text-4xl font-extrabold mb-8">
-        대상 학생: <br> 이은채 (SEED 1) • 김승윤 (SEED 1) • <br> 박정원 (SEEDBED B) • 최시하 (SPROUT 1)
-      </p>
-      <div class="inline-flex items-center gap-3 text-slate-600 text-lg sm:text-xl font-bold bg-white px-8 py-3.5 rounded-full border-2 border-slate-200 shadow-sm animate-pulse">
-        <span>화면을 누르면 목차로 이동합니다</span>
-        <i class="fa-solid fa-arrow-right"></i>
-      </div>
+    <!-- 로그인/회원가입 영역 -->
+    <div id="authSection" class="box">
+        <h3 id="authTitle">로그인</h3>
+        <input type="text" id="authUsername" placeholder="아이디">
+        <input type="password" id="authPassword" placeholder="비밀번호">
+        <button id="loginBtn" onclick="handleLogin()">로그인</button>
+        <button id="signupBtn" onclick="handleSignup()" style="background-color: #4CAF50;">회원가입</button>
     </div>
 
-    <!-- 슬라이드 2: 목차 -->
-    <div class="slide p-10 sm:p-14 bg-slate-50 justify-between">
-      <div class="flex justify-between items-end pb-3 border-b-2 border-slate-200">
-        <div>
-          <span class="text-blue-600 font-black text-base uppercase tracking-wider">STUDENT CASE LIST</span>
-          <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-1">상담 및 집중 관리 학생 목록</h2>
-        </div>
-        <span class="text-blue-800 text-base bg-blue-50 px-5 py-2.5 rounded-xl border border-blue-200 font-bold shadow-sm">
-          <i class="fa-solid fa-arrow-pointer mr-2"></i>학생 이름을 누르면 해당 상담 내용으로 바로 이동합니다
-        </span>
-      </div>
-
-      <div class="flex flex-col gap-4 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
-        <div class="agenda-card bg-white p-7 rounded-2xl border-2 border-slate-200 shadow-sm flex items-center justify-between" onclick="goToSlide(2)">
-          <div class="flex items-center gap-6">
-            <span class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-800 font-black flex items-center justify-center text-2xl shrink-0">1</span>
-            <div>
-              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 leading-snug">
-                이은채 (SEED 1)
-                <span class="text-blue-600 font-bold ml-3 text-2xl">| 등원 시간 조율 및 화요일 단어 보충</span>
-              </h3>
-              <p class="text-lg text-slate-500 font-semibold mt-1.5">자주 늦는 습관을 고치기 위해 등원 시간을 조율하고, 주 1회 하원 전 30분 동안 단어를 더 외우기로 했습니다.</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-chevron-right text-slate-400 text-2xl pr-2"></i>
-        </div>
-
-        <div class="agenda-card bg-white p-7 rounded-2xl border-2 border-slate-200 shadow-sm flex items-center justify-between" onclick="goToSlide(5)">
-          <div class="flex items-center gap-6">
-            <span class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-800 font-black flex items-center justify-center text-2xl shrink-0">2</span>
-            <div>
-              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 leading-snug">
-                김승윤 (SEED 1)
-                <span class="text-blue-600 font-bold ml-3 text-2xl">| 단어 시험 점수 차이에 대한 학부모 상담</span>
-              </h3>
-              <p class="text-lg text-slate-500 font-semibold mt-1.5">집에서 볼 때와 학원 시험 점수가 다른 이유를 차분히 설명해 드리고, 지금이 단어가 늘어나는 과도기임을 안내했습니다.</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-chevron-right text-slate-400 text-2xl pr-2"></i>
-        </div>
-
-        <div class="agenda-card bg-white p-7 rounded-2xl border-2 border-slate-200 shadow-sm flex items-center justify-between" onclick="goToSlide(8)">
-          <div class="flex items-center gap-6">
-            <span class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-800 font-black flex items-center justify-center text-2xl shrink-0">3</span>
-            <div>
-              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 leading-snug">
-                박정원 (SEEDBED B)
-                <span class="text-blue-600 font-bold ml-3 text-2xl">| 원내 학습 방법 및 아이의 학습진행 현황에 대한 의문해결</span>
-              </h3>
-              <p class="text-lg text-slate-500 font-semibold mt-1.5">학부모의 우려사항을 청취하고, 원내 학습 방식과 아이의 학습 진행 상황에 대해 자세히 설명해드렸습니다.</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-chevron-right text-slate-400 text-2xl pr-2"></i>
-        </div>
-
-        <div class="agenda-card bg-white p-7 rounded-2xl border-2 border-slate-200 shadow-sm flex items-center justify-between" onclick="goToSlide(11)">
-          <div class="flex items-center gap-6">
-            <span class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-800 font-black flex items-center justify-center text-2xl shrink-0">4</span>
-            <div>
-              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 leading-snug">
-                최시하 (SPROUT 1)
-                <span class="text-blue-600 font-bold ml-3 text-2xl">| 과제 부담으로 인한 퇴원 상담</span>
-              </h3>
-              <p class="text-lg text-slate-500 font-semibold mt-1.5">수업 태도는 좋으나 가정에서 과제 스트레스가 커서 쉬어가기로 했으며, 추후 복귀의사를 말씀해주셨습니다.</p>
-            </div>
-          </div>
-          <i class="fa-solid fa-chevron-right text-slate-400 text-2xl pr-2"></i>
-        </div>
-      </div>
-      <div></div>
-    </div>
-<!-- 슬라이드 3: 이은채 (SEED 1)요약 -->
-    <div class="slide p-8 sm:p-12 bg-slate-50 justify-between">
-      <div>
-        <span class="text-base font-black text-rose-700 bg-rose-100 px-4 py-1.5 rounded-lg border border-rose-300">CASE 01 • OVERVIEW</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">이은채 (SEED 1)학생: 학습 현황 점검 및 화요일 보충 합의</h2>
-        <p class="text-base text-slate-500 mt-1 font-semibold"><i class="fa-solid fa-hand-pointer text-blue-500 mr-2"></i>카드를 누르면 배경이 흐려지며 해당 내용만 집중 확대됩니다. 다시 누르면 원래대로 돌아옵니다.</p>
-      </div>
-
-      <div class="slide-card-container flex flex-col gap-5 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
-        <div class="row-card">
-          <span class="card-badge px-7 py-4 rounded-xl bg-rose-100 text-rose-800 font-black text-xl shrink-0 border-2 border-rose-300 text-center min-w-[130px]">
-            현재 상태
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 수업 시작 시간에 자주 늦어 앞부분의 중요한 복습 내용을 놓치는 일이 많았습니다.<br>
-            <span class="text-slate-500 font-semibold text-lg">→ 진도가 쌓이면서 혼자 따라가는 속도가 느려지고 시험 점수도 편차가 심했습니다.</span></p>
-            <p>• 스펠링을 외우는 힘과 단어 아는 양이 부족해 문장 쓰기(라이팅) 수업을 버거워했습니다.</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-4 rounded-xl bg-blue-100 text-blue-800 font-black text-xl shrink-0 border-2 border-blue-300 text-center min-w-[130px]">
-            상담 내용
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 어머님과 통화해 보니 집에서는 온라인 숙제만 겨우 챙겨주는 상황이라 지도에 한계가 있다고 하셨습니다.</p>
-            <p>• 지각 방지를 위해 하교 시간을 5분 정도 조정,<br>
-            <span class="text-blue-700 font-extrabold text-lg">→ 학원에서 남아서 부족한 단어를 외우고 갈 수 있도록 보충 수업을 먼저 제안했습니다.</span></p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-4 rounded-xl bg-emerald-100 text-emerald-800 font-black text-xl shrink-0 border-2 border-emerald-300 text-center min-w-[130px]">
-            조치 결과
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 지난 8월부터 매주 화요일 수업이 끝나고 30분씩 남아서 단어를 집중적으로 외우기로 합의했습니다.</p>
-            <p>• 학원에서 이렇게 신경 써 주니 든든하다며 어머님께서 매우 고마워하셨고 현재 잘 진행 중입니다.</p>
-          </div>
-        </div>
-      </div>
-      <div></div>
+    <!-- 사용자 로그인 상태 영역 -->
+    <div id="userSection" class="box hidden">
+        <p><b id="loggedInUser"></b>님 환영합니다!</p>
+        <button onclick="handleLogout()" style="background-color: #666;">로그아웃</button>
     </div>
 
-    <!-- 슬라이드 4: 이은채 (SEED 1)세부 1 -->
-    <div class="slide p-8 sm:p-12 bg-white justify-between">
-      <div>
-        <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">이은채 (SEED 1)상담 상세 리포트 (1/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">현황 및 문제 원인</h2>
-      </div>
-
-      <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            수업 관찰
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 잦은 지각으로 수업 초반에 진행하는 지난주 복습과 핵심 설명을 놓치는 경우가 많았습니다.</p>
-            <p>• 수업 앞부분을 놓치다 보니 후반부 개별 쓰기나 문제 풀이 시간에 친구들보다 속도가 많이 더뎌졌습니다.</p>
-            <p>• 매주 보는 단어 퀴즈 점수도 편차가 커서 케어가 필요한 상태였습니다.</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            학부모 피드백
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 학교에서 학원까지 이동 시간은 충분하지만, 은채가 평소 걸음이 조금 늦은 편이라고 하셨습니다.</p>
-            <p>• 집에 컴퓨터가 없다 보니,<br>
-            <span class="text-rose-700 font-extrabold text-lg">→ 학원에서 내주는 온라인 숙제(C-Learning)를 집에서 따로 복습시켜주기 어려운 환경임을 확인했습니다.</span></p>
-          </div>
-        </div>
-      </div>
-      <div></div>
+    <!-- 글 작성 영역 -->
+    <div id="writeSection" class="box hidden">
+        <h3>새 글 작성</h3>
+        <form id="postForm">
+            <textarea id="postContent" placeholder="내용을 입력하세요..." required></textarea>
+            <input type="file" id="postImage" accept="image/*">
+            <button type="submit">게시하기</button>
+        </form>
     </div>
 
-    <!-- 슬라이드 5: 이은채 (SEED 1)세부 2 -->
-    <div class="slide p-8 sm:p-12 bg-white justify-between">
-      <div>
-        <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">이은채 (SEED 1)상담 상세 리포트 (2/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">상담 솔루션 및 향후 계획</h2>
-      </div>
+    <!-- 게시글 목록 -->
+    <h3>게시글 목록</h3>
+    <div id="postsList"></div>
 
-      <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            강사 소견
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 수업 시간에 선생님 질문에 대답도 잘하고 발표 태도도 참 밝고 적극적인 아이입니다.</p>
-            <p>• 다만 다음 단계로 원활하게 넘어가려면 <br>
-            <span class="text-blue-700 font-extrabold text-2xl">"정확한 스펠링 암기"와 "기초 단어량 확장"이 꼭 필요한 시점입니다.</span></p>
-          </div>
-        </div>
+    <script>
+        let currentUser = localStorage.getItem('currentUser');
 
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            향후 지도 계획
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 8월부터 화요일 수업 후 30~40분씩 남아서 단어 추가 학습지도를 진행하도록 했습니다.</p>
-            <p>• 어머님께서도 마침 하원 후 피아노 학원 이동 시간과 딱 맞는다며 흔쾌히 동의해 주셨습니다.</p>
-            <p>• 학원에서 먼저 적극적으로 보충을 제안해 주어 안심이 된다며 학원에 대한 신뢰를 전해주셨습니다.</p>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </div>
-
-    <!-- 슬라이드 6: 김승윤 (SEED 1) 요약 -->
-    <div class="slide p-8 sm:p-12 bg-slate-50 justify-between">
-      <div>
-        <span class="text-base font-black text-amber-800 bg-amber-100 px-4 py-1.5 rounded-lg border border-amber-300">CASE 02 • OVERVIEW</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">김승윤 (SEED 1) 학생: 단어 시험 점수 상담 및 신뢰 형성</h2>
-        <p class="text-base text-slate-500 mt-1 font-semibold"><i class="fa-solid fa-hand-pointer text-blue-500 mr-2"></i>카드를 누르면 배경이 흐려지며 해당 내용만 집중 확대됩니다. 다시 누르면 원래대로 돌아옵니다.</p>
-      </div>
-
-      <div class="slide-card-container flex flex-col gap-5 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
-        <div class="row-card">
-          <span class="card-badge px-7 py-4 rounded-xl bg-rose-100 text-rose-800 font-black text-xl shrink-0 border-2 border-rose-300 text-center min-w-[130px]">
-            현재 상태
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 집에서 시험을 볼 때는 다 맞히는데, 학원 단어 시험만 보면 점수가 낮게 나와 어머님께서 걱정하셨습니다.</p>
-            <p>• 우리말 뜻을 보고 영어 단어를 직접 쓸 때, 소리와 스펠링을 연결하는 과정에서 헷갈려 하는 모습을 보였습니다.</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-4 rounded-xl bg-blue-100 text-blue-800 font-black text-xl shrink-0 border-2 border-blue-300 text-center min-w-[130px]">
-            상담 내용
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 어머님께서 "집에서는 잘하는데 학원에서 왜 이럴까요? 학원의 지도 방식이 제 아이에게 적합한가요?" 하며 답답해하셨습니다.</p>
-            <p>• 어휘량이 폭발적으로 늘어나는 단계에서 아이들이 흔히 겪는 자연스러운 과정임을 자세히 설명해 드렸습니다.</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-4 rounded-xl bg-emerald-100 text-emerald-800 font-black text-xl shrink-0 border-2 border-emerald-300 text-center min-w-[130px]">
-            조치 결과
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 집에서는 뜻을 보고 단어를 적어보는 연습 위주로 봐주시고, 점수보다는 따뜻한 격려를 부탁드렸습니다.</p>
-            <p>• 설명을 들으신 후 어머님께서 안심하셨고, 학원의 지도방식에 대해 신뢰하셨습니다.</p>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </div>
-
-    <!-- 슬라이드 7: 김승윤 (SEED 1) 세부 1 -->
-    <div class="slide p-8 sm:p-12 bg-white justify-between">
-      <div>
-        <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">김승윤 (SEED 1) 상담 상세 리포트 (1/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">현황 및 문제 원인</h2>
-      </div>
-
-      <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            수업 관찰
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 문장 만들기(청크북) 과제는 한번도 밀리지 않고 항상 성실하게 잘 해옵니다.</p>
-            <p>• 입으로 소리 내어 말할 때는 잘 맞히지만, 공책에 뜻을 보고 영어로 직접 쓸 때 스펠링 실수가 자주 나옵니다.</p>
-            <p>• 긴 지문을 읽을 때 새로운 단어 발음을 주저하거나 문장 속 세부 정보 파악을 놓치는 경우가 있습니다.</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            학부모 피드백
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• "집에서 테스트할 때는 다 맞히는데 학원 시험만 보면 왜 점수가 떨어지는지 답답하다"며 우려하셨습니다.</p>
-            <p>• 혹시 현재 학원의 학습 가이드나 가르치는 방식이 승윤이에게 안 맞는 것은 아닌지 조심스럽게 물어보셨습니다.</p>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </div>
-
-    <!-- 슬라이드 8: 김승윤 (SEED 1) 세부 2 -->
-    <div class="slide p-8 sm:p-12 bg-white justify-between">
-      <div>
-        <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">김승윤 (SEED 1) 상담 상세 리포트 (2/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">상담 솔루션 및 향후 계획</h2>
-      </div>
-
-      <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            강사 소견
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 현재 단계는 암기해야 할 단어 양이 갑자기 늘어나는 과도기라 아이 머릿속에서 정리가 덜 된 상태입니다.</p>
-            <p>• 영어가 한 단계 더 도약할 때 모든 아이들이 거치는 성장통 같은 과정이니 너무 조급해하지 않으셔도 됩니다.</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            향후 지도 계획
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 승윤이는 이해력이 좋아 방향만 잡아주면 금방 제 실력을 찾을 아이니 믿고 지켜봐 달라고 당부드렸습니다.</p>
-            <p>• 집에서는 단어 점수로 다그치기보다 뜻과 영단어를 매칭하며 가볍게 읽어보는 방식으로 가이드를 드렸습니다.</p>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </div>
-
-    <!-- 슬라이드 9: 박정원 (SEEDBED B) 요약 -->
-    <div class="slide p-8 sm:p-12 bg-slate-50 justify-between">
-      <div>
-        <span class="text-base font-black text-emerald-800 bg-emerald-100 px-4 py-1.5 rounded-lg border border-emerald-300">CASE 03 • OVERVIEW</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">박정원 (SEEDBED B) 학생: 원내 학습 방법 및 아이의 학습진행 현황에 대한 의문해결</h2>
-        <p class="text-base text-slate-500 mt-1 font-semibold"><i class="fa-solid fa-hand-pointer text-blue-500 mr-2"></i>카드를 누르면 배경이 흐려지며 해당 내용만 집중 확대됩니다. 다시 누르면 원래대로 돌아옵니다.</p>
-      </div>
-
-      <div class="slide-card-container flex flex-col gap-5 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
-        <div class="row-card">
-          <span class="card-badge px-7 py-4 rounded-xl bg-rose-100 text-rose-800 font-black text-xl shrink-0 border-2 border-rose-300 text-center min-w-[130px]">
-            현재 상태
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 평소 수업 태도는 준수하지만 과제를 할 때 간혹 알파벳 순서를 헷갈려 하는 경우가 있습니다.</p>
-            <p>• 이모님이 공부를 봐주시다가 "애가 기본 알파벳도 모른다"고 하셔서 어머님께서 의문을 가지고 연락을 주셨습니다.</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-4 rounded-xl bg-blue-100 text-blue-800 font-black text-xl shrink-0 border-2 border-blue-300 text-center min-w-[130px]">
-            상담 내용
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 실제로 알파벳을 모르는 수준인지 걱정하시는 어머님께 정원이의 실제 시험지를 확인시켜 드렸습니다.</p>
-            <p>• 어머님의 의문과 달리 학습과정이 정상적으로 진행되었음을 설명해드려서  안심시켜 드렸습니다.</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-4 rounded-xl bg-emerald-100 text-emerald-800 font-black text-xl shrink-0 border-2 border-emerald-300 text-center min-w-[130px]">
-            조치 결과
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 파닉스 소리를 실제 단어 쓰기에 적용하는 단계에서 흔히 나타나는 일시적인 혼동임을 설명해 드렸습니다.</p>
-            <p>• 그동안 정원이가 잘 해온 평가 기록을 보여드리며 어머님의 불안을 해소해 드렸습니다.</p>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </div>
-
-    <!-- 슬라이드 10: 박정원 (SEEDBED B) 세부 1 -->
-    <div class="slide p-8 sm:p-12 bg-white justify-between">
-      <div>
-        <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">박정원 (SEEDBED B) 상담 상세 리포트 (1/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">현황 및 문제 원인</h2>
-      </div>
-
-      <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            수업 관찰
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 수업 시간에 항상 밝고 적극적이며, 단어 발음도 정확하게 잘 따라 하는 모범적인 학생입니다.</p>
-            <p>• 평소 숙제도 성실히 이행하는 편입니다.</p>
-            <p>• 정규수업 및 방학 특강에서도 파닉스 규칙을 이해하는 능력이 뛰어나 반에서도 수업 참여도가 높았습니다.</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            학부모 피드백
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 이모님께서 숙제를 지도해 주시다가 'kitchen'을 'chicken'으로 쓴 것을 보셨다고 합니다.</p>
-            <p>• "기본 알파벳도 모르는 것 같다"는 이모님의 말씀에 어머님이 의문을 가지시며 학원에 확인 전화를 주셨습니다.</p>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </div>
-
-    <!-- 슬라이드 11: 박정원 (SEEDBED B) 세부 2 -->
-    <div class="slide p-8 sm:p-12 bg-white justify-between">
-      <div>
-        <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">박정원 (SEEDBED B) 상담 상세 리포트 (2/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">상담 솔루션 및 향후 계획</h2>
-      </div>
-
-      <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            강사 소견
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 실제 정원이의 시험지를 확인해 보니 'kitchen'에서 알파벳 't' 하나만 빠졌을 뿐 나머지는 정확했습니다.</p>
-            <p>• 알파벳을 모르는 것이 아니라 스펠링을 기재하는 과정에서 혼동이 있었다고 말씀드렸습니다</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            향후 지도 계획
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 알파벳을 모른다면 현재 진도를 소화할 수 없다는 점을 짚어드리고, 소리 중심 학습에서 쓰기 학습으로 넘어갈 때 생기는 자연스러운 과정임을 설명해 드렸습니다.</p>
-            <p>• 원에서의 성취 기록을 바탕으로 믿고 맡겨주셔도 된다고 안내해 드리며 상담을 마무리했습니다.</p>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </div>
-
-    <!-- 슬라이드 12: 최시하 (SPROUT 1) 요약 -->
-    <div class="slide p-8 sm:p-12 bg-slate-50 justify-between">
-      <div>
-        <span class="text-base font-black text-violet-800 bg-violet-100 px-4 py-1.5 rounded-lg border border-violet-300">CASE 04 • OVERVIEW</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">최시하 (SPROUT 1) 학생: 과제 부담으로 인한 일시 휴원 상담</h2>
-        <p class="text-base text-slate-500 mt-1 font-semibold"><i class="fa-solid fa-hand-pointer text-blue-500 mr-2"></i>카드를 누르면 배경이 흐려지며 해당 내용만 집중 확대됩니다. 다시 누르면 원래대로 돌아옵니다.</p>
-      </div>
-
-      <div class="slide-card-container flex flex-col gap-5 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
-        <div class="row-card">
-          <span class="card-badge px-7 py-4 rounded-xl bg-rose-100 text-rose-800 font-black text-xl shrink-0 border-2 border-rose-300 text-center min-w-[130px]">
-            현재 상태
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 수업 태도와 이해도는 준수한 편이나, 단어 암기와 과제 양에 대한 스트레스가 컸습니다.</p>
-            <p>• 아이가 과제에 대한 스트레스로 인해 가정 내에서 부모님과 아이 간의 마찰이 자주 발생했습니다.</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-4 rounded-xl bg-blue-100 text-blue-800 font-black text-xl shrink-0 border-2 border-blue-300 text-center min-w-[130px]">
-            상담 내용
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 어머님께서 "숙제 때문에 아이가 받는 스트레스가 커서 억지로 시키기보다 잠시 휴식을 주고 싶다"고 하셨습니다.</p>
-            <p>• 시하의 역량을 알기에 아쉬움이 커서 재차 수업진행하는 것을 권유드렸으나, 어머님의 의견을 존중해드렸습니다.</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-4 rounded-xl bg-emerald-100 text-emerald-800 font-black text-xl shrink-0 border-2 border-emerald-300 text-center min-w-[130px]">
-            조치 결과
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 학원이나 선생님에 대한 불만은 전혀 없으며, 시하도 학원 자체는 매우 즐겁게 다니고 있음을 확인했습니다.</p>
-            <p>• "아이 컨디션이 회복되면 아이가 다시 학원 보내달라는 말을 할 것 같다" 는 말씀을 해주시고 상담을 마무리했습니다.</p>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </div>
-
-    <!-- 슬라이드 13: 최시하 (SPROUT 1) 세부 1 -->
-    <div class="slide p-8 sm:p-12 bg-white justify-between">
-      <div>
-        <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">최시하 (SPROUT 1) 상담 상세 리포트 (1/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">현황 및 문제 원인</h2>
-      </div>
-
-      <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            수업 관찰
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 차분하지만 집중력이 뛰어나고, 발표나 토론 시 본인의 생각을 명확히 표현하는 학생입니다.</p>
-            <p>• 지문의 핵심을 스스로 요약하는 인지 능력이 또래에 비해 우수합니다.</p>
-            <p>• 듣기 요약과 문법 개념 이해력이 뛰어나 학원 수업에 대한 이해도가 높습니다.</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            학부모 피드백
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-3">
-            <p>• 상위 레벨(Sprout)로 진급한 이후 암기 단어량과 숙제 부담이 급격히 증가했습니다.</p>
-            <p>• 학원 수업은 무리 없이 따라왔으나, 집에서 혼자 과제를 소화해 내는 과정에서 정서적 부담을 크게 느꼈던 것 같습니다.</p>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </div>
-
-    <!-- 슬라이드 14: 최시하 (SPROUT 1) 세부 2 -->
-    <div class="slide p-8 sm:p-12 bg-white justify-between">
-      <div>
-        <span class="text-base font-black text-slate-600 bg-slate-100 px-4 py-1.5 rounded-lg uppercase tracking-wide border border-slate-300">최시하 (SPROUT 1) 상담 상세 리포트 (2/2)</span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-2">상담 솔루션 및 향후 계획</h2>
-      </div>
-
-      <div class="slide-card-container flex flex-col gap-6 flex-grow justify-center max-w-5xl mx-auto w-full py-4">
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            강사 소견
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-           <p>• 어머님께서 "학기 초부터 단어 암기 문제로 아이가 힘들어한다"고 말씀해주셔서 이전에 상담해드렸습니다.</p>
-            <p>• 아이가 학습 진행에 따른 보상에도 의욕이 없음을 확인하였습니다.</p>
-            <p>• 아이의 역량에 아쉬움을 느껴 재차 수업진행에 대해 권유드렸으나, 어머님의 의견을 존중해드렸습니다.</p>
-          </div>
-        </div>
-
-        <div class="row-card">
-          <span class="card-badge px-7 py-5 rounded-xl bg-slate-100 text-slate-900 font-black text-xl shrink-0 border-2 border-slate-300 text-center min-w-[140px]">
-            향후 지도 계획
-          </span>
-          <div class="text-slate-800 text-xl font-bold leading-relaxed space-y-2">
-            <p>• 학원 프로그램에 대한 불만이 아니라는 점을 강조해 주셨으며, 재충전 후 복귀할 것임을 말씀하셨습니다.</p>
-            <p>• 휴원 기간 동안 부담 없이 쉬면서 영어에 대한 흥미를 유지할 수 있는 방향을 안내해 드렸습니다.</p>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </div>
-
-
-
-    <!-- 하단 페이지 컨트롤러 (기본 숨김) -->
-    <div id="controls">
-      <button class="control-btn" id="prev-btn" title="이전 (←)"><i class="fa-solid fa-chevron-left"></i></button>
-      <div id="slide-indicator">1 / 15</div>
-      <button class="control-btn" id="next-btn" title="다음 (→)"><i class="fa-solid fa-chevron-right"></i></button>
-    </div>
-
-  </div>
-
-  <script>
-    const slides = document.querySelectorAll('.slide');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    const indicator = document.getElementById('slide-indicator');
-    const returnAgendaBtn = document.getElementById('return-agenda-btn');
-    const controls = document.getElementById('controls');
-    const presentationArea = document.getElementById('presentation-area');
-    let currentSlide = 0;
-
-    function togglePageControls(forceState) {
-      const isHidden = getComputedStyle(controls).display === 'none';
-      const shouldShow = (typeof forceState === 'boolean') ? forceState : isHidden;
-      controls.style.display = shouldShow ? 'flex' : 'none';
-    }
-    window.togglePageControls = togglePageControls;
-
-    function resetExpandedCards() {
-      document.querySelectorAll('.row-card.expanded').forEach(c => c.classList.remove('expanded'));
-      document.querySelectorAll('.slide.has-expanded').forEach(s => s.classList.remove('has-expanded'));
-      document.querySelectorAll('.slide-card-container.has-expanded').forEach(sc => sc.classList.remove('has-expanded'));
-    }
-
-    function updateSlides() {
-      resetExpandedCards();
-
-      slides.forEach((slide, index) => {
-        slide.classList.remove('active', 'prev-out');
-        if (index === currentSlide) {
-          slide.classList.add('active');
-          slide.scrollTop = 0;
-        } else if (index < currentSlide) {
-          slide.classList.add('prev-out');
+        function updateUI() {
+            if (currentUser) {
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('userSection').classList.remove('hidden');
+                document.getElementById('writeSection').classList.remove('hidden');
+                document.getElementById('loggedInUser').innerText = currentUser;
+            } else {
+                document.getElementById('authSection').classList.remove('hidden');
+                document.getElementById('userSection').classList.add('hidden');
+                document.getElementById('writeSection').classList.add('hidden');
+            }
+            loadPosts();
         }
-      });
-      indicator.innerText = `${currentSlide + 1} / ${slides.length}`;
 
-      if (currentSlide >= 2) {
-        returnAgendaBtn.classList.remove('hidden');
-      } else {
-        returnAgendaBtn.classList.add('hidden');
-      }
-    }
-
-    function goToSlide(slideIndex) {
-      if (slideIndex >= 0 && slideIndex < slides.length) {
-        currentSlide = slideIndex;
-        updateSlides();
-      }
-    }
-
-    function nextSlide() {
-      if (currentSlide < slides.length - 1) {
-        currentSlide++;
-        updateSlides();
-      }
-    }
-
-    function prevSlide() {
-      if (currentSlide > 0) {
-        currentSlide--;
-        updateSlides();
-      }
-    }
-
-    nextBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      nextSlide();
-    });
-
-    prevBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      prevSlide();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'p' || e.key === 'P') {
-        togglePageControls();
-      } else if (e.key === 'ArrowRight' || e.key === 'Space') {
-        nextSlide();
-      } else if (e.key === 'ArrowLeft') {
-        prevSlide();
-      } else if (e.key === 'Escape' || e.key === 'Home') {
-        goToSlide(1);
-      }
-    });
-
-    // 가로형 카드 클릭 토글 (확대/축소 및 색상 하이라이트)
-    document.querySelectorAll('.row-card').forEach(card => {
-      card.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const currentActiveSlide = this.closest('.slide');
-        const currentContainer = this.closest('.slide-card-container');
-        const isAlreadyExpanded = this.classList.contains('expanded');
-
-        resetExpandedCards();
-
-        if (!isAlreadyExpanded) {
-          this.classList.add('expanded');
-          if (currentActiveSlide) currentActiveSlide.classList.add('has-expanded');
-          if (currentContainer) currentContainer.classList.add('has-expanded');
+        async function handleSignup() {
+            const username = document.getElementById('authUsername').value;
+            const password = document.getElementById('authPassword').value;
+            
+            const res = await fetch('/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                alert('회원가입 성공! 로그인해 주세요.');
+            } else {
+                alert(data.error);
+            }
         }
-      });
-    });
 
-    document.addEventListener('click', () => {
-      resetExpandedCards();
-    });
+        async function handleLogin() {
+            const username = document.getElementById('authUsername').value;
+            const password = document.getElementById('authPassword').value;
 
-    // 모바일 터치 스와이프 제스처
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                currentUser = data.username;
+                localStorage.setItem('currentUser', currentUser);
+                updateUI();
+            } else {
+                alert(data.error);
+            }
+        }
 
-    presentationArea.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    }, { passive: true });
+        function handleLogout() {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            updateUI();
+        }
 
-    presentationArea.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      touchEndY = e.changedTouches[0].screenY;
-      
-      const diffX = touchEndX - touchStartX;
-      const diffY = touchEndY - touchStartY;
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const content = document.getElementById('postContent').value;
+            const imageFile = document.getElementById('postImage').files[0];
 
-      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
-        if (diffX < 0) nextSlide();
-        else prevSlide();
-      }
-    }, { passive: true });
+            const formData = new FormData();
+            formData.append('author', currentUser);
+            formData.append('content', content);
+            if (imageFile) formData.append('image', imageFile);
 
-    updateSlides();
-  </script>
+            const res = await fetch('/api/posts', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (res.ok) {
+                document.getElementById('postContent').value = '';
+                document.getElementById('postImage').value = '';
+                loadPosts();
+            } else {
+                alert('게시글 업로드 실패');
+            }
+        });
+
+        async function loadPosts() {
+            const res = await fetch('/api/posts');
+            const posts = await res.json();
+            const listDiv = document.getElementById('postsList');
+            listDiv.innerHTML = '';
+
+            posts.forEach(post => {
+                const postDiv = document.createElement('div');
+                postDiv.className = 'post';
+                postDiv.innerHTML = `
+                    <strong>${post.author}</strong> <small>(${post.created_at})</small>
+                    <p>${post.content}</p>
+                    ${post.image_url ? `<img src="${post.image_url}">` : ''}
+                `;
+                listDiv.appendChild(postDiv);
+            });
+        }
+
+        updateUI();
+    </script>
 </body>
 </html>
